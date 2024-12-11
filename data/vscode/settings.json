@@ -1,0 +1,28 @@
+{
+  "editor.bracketPairColorization.enabled": false,
+  "editor.fontFamily": "Cascadia Code",
+  //"editor.fontFamily": "Consolas, 'Courier New', monospace",
+  "editor.fontSize": 11,
+  "editor.stickyScroll.enabled": false,
+  
+  "explorer.autoReveal": false,
+  "explorer.compactFolders": false,
+  "explorer.sortOrder": "type",
+  
+  "telemetry.telemetryLevel": "off",
+  
+  "workbench.editor.enablePreview": false,
+  "workbench.enableExperiments": false,
+  "workbench.list.openMode": "doubleClick",
+  "workbench.startupEditor": "none",
+  "workbench.tree.indent": 20,
+ 
+  //
+  // extensions
+  //
+
+  "chaliceIcons.showArrows": false,
+
+  "powershell.enableReferencesCodeLens": false,
+  "powershell.integratedConsole.suppressStartupBanner": true,
+}

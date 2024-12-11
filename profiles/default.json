@@ -1,0 +1,182 @@
+{
+  "ID": "default",
+  "Name": "Default Rules",
+  "Rules": {
+    "System Configuration": {
+      "Privacy": {
+        ".NET telemetry": "disable",
+        "Apps having ability to use advertising ID for experiences across apps": "disable",
+        "Tailored experiences with diagnostic data for current user": "disable",
+        "Application launch tracking": "disable",
+        "Activity History": "disable",
+        "SmartScreen Filter for Store Apps": "disable",
+        "Key logging & transmission to Microsoft": "disable",
+        "Websites having ability to access language list": "disable",
+        "SmartGlass": "disable",
+        "Suggested content in settings app": "disable",
+        "Tips and suggestions for welcome and what's new": "disable",
+        "Tips and suggestions when I use windows": "disable",
+        "Start Menu: Suggested content": "disable",
+        "Start Menu: Recommended": "disable",
+        "Start Menu: Search entries": "disable",
+        "Suggesting ways current user can finish setting up his device to get the most out of Windows": "disable",
+        "Sync provider ads": "disable",
+        "Automatic installation of suggested apps": "disable",
+        "Suggested app notifications (Ads for MS services)": "disable",
+        "Showing suggestions for using mobile device with Windows (Phone Link suggestions)": "disable",
+        "Speech, Inking, & Typing getting to know user": "disable",
+        "Feedback: Windows asking for user feedback": "disable",
+        "Feedback: Sending Diagnostic and usage data": "disable",
+        "Block Outlook Preview from Outlook 365 in Windows Registry": "disable",
+        "Bing Search widget": "disable",
+        "Defender: Cloud-Based Protection": "disable",
+        "Defender: Automatic sample submission": "disable",
+        "App having access to account info": "deny",
+        "App having access to calendar": "deny",
+        "App having access to call history": "deny",
+        "App having access to camera": "deny",
+        "App having access to contacts": "deny",
+        "App having access to app diagnostics": "deny",
+        "App having access to documents": "deny",
+        "App having access to downloads": "deny",
+        "App having access to emails": "deny",
+        "App having access to filesystem": "deny",
+        "App having access to location": "deny",
+        "App having access to messaging": "deny",
+        "App having access to microphone": "deny",
+        "App having access to music library": "deny",
+        "App having access to notifications": "deny",
+        "App having access to phone calls": "deny",
+        "App having access to pictures": "deny",
+        "App having access to radios": "deny",
+        "App having access to screenshots": "deny",
+        "App having access to tasks": "deny",
+        "App having ability to share and sync with non-explicitly-paired wireless devices over uPnP": "deny",
+        "App having access to videos": "deny"
+      },
+
+      "Default Applications": {
+        "Microsoft 3D Builder": "remove",
+        "Microsoft Alarms and Clock": "remove",
+        "Microsoft Bing Finance": "remove",
+        "Microsoft Bing News": "remove",
+        "Microsoft Bing Search": "remove",
+        "Microsoft Bing Sports": "remove",
+        "Microsoft Bing Weather": "remove",
+        "Microsoft Calendar and Mail": "remove",
+        "Microsoft Cortana": "remove",
+        "Microsoft Feedback Hub": "remove",
+        "Microsoft Get Office": "remove",
+        "Microsoft Maps": "remove",
+        "Microsoft Messaging": "remove",
+        "Microsoft Mobile Plans": "remove",
+        "Microsoft OneNote": "remove",
+        "Microsoft Outlook": "remove",
+        "Microsoft People": "remove",
+        "Microsoft Photos": "remove",
+        "Microsoft Print 3D": "remove",
+        "Microsoft Quick Assist": "remove",
+        "Microsoft Skype": "remove",
+        "Microsoft Solitaire": "remove",
+        "Microsoft Sticky Notes": "remove",
+        "Microsoft Sway": "remove",
+        "Microsoft Todos": "remove",
+        "Microsoft Voice Recorder": "remove",
+        "Microsoft Xbox": "remove",
+        "Microsoft Your Phone": "remove",
+        "Microsoft Windows Media Player": "disable",
+        "Microsoft OneDrive": "remove_completely",
+        "Adobe Creative Cloud Express": "remove",
+        "Amazon Prime Video": "remove",
+        "Autodesk Sketch book": "remove",
+        "Bubble Witch 3 Saga": "remove",
+        "Candy Crush Soda Saga": "remove",
+        "Clipchamp Video Editor": "remove",
+        "Disney Magic Kingdoms": "remove",
+        "Disney+": "remove",
+        "Dolby": "remove",
+        "Facebook": "remove",
+        "Instagram": "remove",
+        "March of Empires": "remove",
+        "SlingTV": "remove",
+        "Spotify": "remove",
+        "TikTok": "remove",
+        "Twitter": "remove",
+        "Zune Music": "remove",
+        "Zune Video": "remove"
+      },
+    
+      "General": {
+        "Edge running in background": "disable",
+        "Superfetch": "disable",
+        "WiFi Sense": "disable",
+        "WSL": {
+          "action": "enable",
+          "distributions": [
+            {
+              "name": "Debian"
+            }
+          ]
+        }
+      },
+
+      "Junk": {
+        "Contacts (user profile)": "remove",
+        "Favorites (user profile)": "remove",
+        "Links (user profile)": "remove",
+        "SavedGames (user profile)": "remove",
+        "Searches (user profile)": "remove",
+        ".lesshst": "remove"
+      }
+    },
+
+    "System Personalization": {
+      "General": {
+        "Developer mode": "enable",
+        "Startup sound": "disable",
+        "Hibernation": "disable",
+        "Long Paths": "enable",
+        "Sticky Keys": "disable",
+        "Windows Hello notifications": "disable",
+        "Windows Narrator Hotkey": "disable",
+        "Auto-correct": "disable",
+        "Browser tabs during alt-tab": "disable",
+        "Game bar (ms-gamingoverlay)": "disable",
+
+        "Time": "set_automatic",
+        "Time Zone": "set_manual",
+        "Time Zone Value": "Central Europe Standard Time",
+        "First Day of Week Value": "0",
+        "Short Date Format Value": ["yyyy-MM-dd", "2", "-"],
+        "Long Date Format Value": "dddd, d MMMM, yyyy",
+        "Short Time Format Value": "HH:mm",
+        "Long Time Format Value": ["HH:mm:ss", "1", "1", "0", ":"]
+      },
+      
+      "Explorer": {
+        "Compact View Mode": "disable",
+        "Hidden files": "hide",
+        "File extensions": "show",
+        "Path in title bar": "show",
+        "Creating Thumbs.db files on network volumes": "disable",
+        "Search, Task, Widget, Chat and Copilot buttons": "hide",
+        "Copilot service": "disable",
+        "Widgets service": "disable",
+        "News and Interests": "disable",
+        "Taskbar: Colors on Taskbar, Start, and SysTray": "skip",
+        "Titlebar: Theme colors on titlebar": "skip",
+        "Recycle Bin: Delete Confirmation Dialog": "enable",
+        "Align taskbar left": "enable",
+        "Show recently added apps": "disable",
+
+        "Context Menu": {
+          "Include in library": "skip",
+          "Pin to Start": "skip",
+          "Give access to": "skip",
+          "Scan with Microsoft Defender": "skip",
+          "Send To": "skip"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "key": "quadrortx",
+    "name": "Nvidia Quadro P600 compatible driver",
+    "vendor": "Nvidia",
+    "seeAlso": "https://www.nvidia.com/en-us/drivers/details/232670/",
+    "releases": [
+      {
+        "version": "553.09",
+        "remoteUrl": "https://us.download.nvidia.com/Windows/Quadro_Certified/553.09/553.09-quadro-rtx-desktop-notebook-win10-win11-64bit-international-dch-whql.exe"
+      }
+    ]
+  }
+]

@@ -1,0 +1,16 @@
+#
+# To list global configuration with expanded includes: git config --global --includes user.name
+#
+
+[include]
+  path = "~/.local.gitconfig"
+
+[core]
+  autocrlf = false
+
+[push]
+  default = simple
+  autoSetupRemote = false
+  
+[branch]
+  autoSetupMerge = true
