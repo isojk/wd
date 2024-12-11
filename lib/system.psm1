@@ -132,13 +132,13 @@ function atn_system_configure_privacy ($profile) {
         }
     }
 
-    atn_core_eval_rule $options "Suggested app notifications (Ads for MS services" @{
+    atn_core_eval_rule $options "Suggested app notifications (Ads for MS services)" @{
         "disable" = {
             atn_core_reg_set -Hive "HKCU" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested" -Name "Enabled" -Type DWord -Value 0
         }
     }
 
-    atn_core_eval_rule $options "Showing suggestions for using mobile device with Windows (Phone Link suggestions" @{
+    atn_core_eval_rule $options "Showing suggestions for using mobile device with Windows (Phone Link suggestions)" @{
         "disable" = {
             atn_core_reg_set -Hive "HKCU" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Mobility" -Name "OptedIn" -Type DWord -Value 0
         }
