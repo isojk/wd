@@ -356,3 +356,44 @@ function atn_core_enum_env_path {
 
 Export-ModuleMember -Function atn_core_enum_env_path
 
+
+
+function atn_core_fs_change_attributes () {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)] [string] $Filename,
+        [Parameter(Mandatory=$false)] [switch] $Hidden,
+        [Parameter(Mandatory=$false)] [switch] $System
+    )
+
+    process {
+        Get-Item $Filename -Force | ForEach-Object {
+            if ($Hidden) {
+                $_.Attributes = $_.Attributes -bor [System.IO.FileAttributes]::Hidden
+            }
+
+            if ($System) {
+                $_.Attributes = $_.Attributes -bor [System.IO.FileAttributes]::System
+            }
+        }
+    }
+}
+
+Export-ModuleMember -Function atn_core_fs_change_attributes
+
+
+function atn_core_fs_link () {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)] [string] $Source,
+        [Parameter(Mandatory=$true)] [string] $Target
+    )
+
+    if (Test-Path $Source) {
+        Remove-Item -Path $Source -Force | Out-Null
+    }
+
+    New-Item -ItemType SymbolicLink -Path $Source -Target $Target | Out-Null
+}
+
+Export-ModuleMember -Function atn_core_fs_link

@@ -20,4 +20,4 @@ $profile = atn_load_profile "home"
 #atn_system_personalize_general $profile
 #atn_system_personalize_explorer $profile
 
-#atn_eval_profile_apps $profile -PersonalizeOnly
+atn_eval_profile_apps $profile -PersonalizeOnly
