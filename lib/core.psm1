@@ -1,128 +1,157 @@
-[System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
-param()
+function wdCoreGetBasedir {
+    [CmdletBinding()]
+    param ()
 
-function atn_core_get_basedir {
-    Join-Path -Path "${Env:USERPROFILE}" -ChildPath ".wd" -Resolve
+    process {
+        Join-Path -Path "${Env:USERPROFILE}" -ChildPath ".wd" -Resolve
+    }
 }
 
-Export-ModuleMember -Function atn_core_get_basedir
+Export-ModuleMember -Function wdCoreGetBasedir
 
-function atn_core_get_profiles_dir {
-    Join-Path -Path "$(& atn_core_get_basedir)" -ChildPath "profiles" -Resolve
+function wdCoreGetProfilesDir {
+    [CmdletBinding()]
+    param ()
+
+    process {
+        Join-Path -Path "$(& wdCoreGetBasedir)" -ChildPath "profiles" -Resolve
+    }
 }
 
-Export-ModuleMember -Function atn_core_get_profiles_dir
+Export-ModuleMember -Function wdCoreGetProfilesDir
 
-function atn_core_get_data_dir {
-    Join-Path -Path "$(& atn_core_get_basedir)" -ChildPath "data" -Resolve
+function wdCoreGetDataDir {
+    [CmdletBinding()]
+    param ()
+
+    process {
+        Join-Path -Path "$(& wdCoreGetBasedir)" -ChildPath "data" -Resolve
+    }
 }
 
-Export-ModuleMember -Function atn_core_get_data_dir
+Export-ModuleMember -Function wdCoreGetDataDir
 
-function atn_core_get_private_basedir {
-    Join-Path -Path "${Env:USERPROFILE}" -ChildPath ".wdp" -Resolve
+function wdCoreGetPrivateBasedir {
+    [CmdletBinding()]
+    param ()
+
+    process {
+        Join-Path -Path "${Env:USERPROFILE}" -ChildPath ".wdp" -Resolve
+    }
 }
 
-function atn_core_get_private_data_dir {
-    atn_core_get_private_basedir
+function wdCoreGetPrivateDataDir {
+    [CmdletBinding()]
+    param ()
+
+    process {
+        wdCoreGetPrivateBasedir
+    }
 }
 
-Export-ModuleMember -Function atn_core_get_private_data_dir
+Export-ModuleMember -Function wdCoreGetPrivateDataDir
 
+function wdCoreMergePSObjects {
+    [CmdletBinding()]
+    param (
+        [Parameter(Position = 0, Mandatory = $true)] [object] $target,
+        [Parameter(Position = 1, Mandatory = $true)] [object] $source
+    )
 
+    process {
+        foreach ($p in $source.psobject.Properties) {
+            if ($p.TypeNameOfValue -eq 'System.Management.Automation.PSCustomObject' -and ($p.Name -in $target.PSobject.Properties.Name)) {
+                wdCoreMergePSObjects $target."$($p.Name)" $p.Value
+                continue;
+            }
 
-
-function atn_core_object_hasproperty ($target, $propertyName) {
-    $propertyName -in $target.PSobject.Properties.Name
+            $target | Add-Member -MemberType $p.MemberType -Name $p.Name -Value $p.Value -Force
+        }
+    }
 }
 
-Export-ModuleMember -Function atn_core_object_hasproperty
+Export-ModuleMember -Function wdCoreMergePSObjects
 
-function atn_core_object_merge ($target, $source) {
-    foreach ($p in $source.psobject.Properties) {
-        if ($p.TypeNameOfValue -eq 'System.Management.Automation.PSCustomObject' -and (atn_core_object_hasproperty $target $p.Name)) {
-            atn_core_object_merge $target."$($p.Name)" $p.Value
-            continue;
+function wdCoreEvalRule {
+    [CmdletBinding()]
+    param (
+        [Parameter(Position = 0, Mandatory = $true)] [object] $target,
+        [Parameter(Position = 1, Mandatory = $true)] [string] $propertyName,
+        [Parameter(Position = 2, Mandatory = $true)] [object] $ht
+    )
+
+    process {
+        $defaultHandler = $null
+        if ($ht.Contains("_")) {
+            $defaultHandler = $ht."_"
         }
 
-        $target | Add-Member -MemberType $p.MemberType -Name $p.Name -Value $p.Value -Force
-    }
-}
+        if (!($propertyName -in $target.PSobject.Properties.Name)) {
+            if ($defaultHandler -ne $null) {
+                $defaultHandler.Invoke()
+            }
 
-Export-ModuleMember -Function atn_core_object_merge
+            return
+        }
 
+        $value = $target."${propertyName}"
+        if (!($value -is [string])) {
+            if ($defaultHandler -ne $null) {
+                $defaultHandler.Invoke()
+            }
 
-function atn_core_eval_rule ($target, [string] $propertyName, $ht) {
-    $defaultHandler = $null
-    if ($ht.Contains("_")) {
-        $defaultHandler = $ht."_"
-    }
+            return
+        }
 
-    if (!(atn_core_object_hasproperty $target $propertyName)) {
+        $value = $value.Trim().ToLower()
+
+        if ($ht.Contains($value)) {
+            switch ($value) {
+                "enable" {
+                    wdCoreLog "Enable: ${propertyName}"
+                }
+
+                "disable" {
+                    wdCoreLog "Disable: ${propertyName}"
+                }
+
+                "show" {
+                    wdCoreLog "Show: ${propertyName}"
+                }
+
+                "hide" {
+                    wdCoreLog "Hide: ${propertyName}"
+                }
+
+                "allow" {
+                    wdCoreLog "Allow: ${propertyName}"
+                }
+
+                "deny" {
+                    wdCoreLog "Deny: ${propertyName}"
+                }
+
+                "remove" {
+                    wdCoreLog "Remove: ${propertyName}"
+                }
+
+                "remove_completely" {
+                    wdCoreLog "Remove: ${propertyName}"
+                }
+            }
+
+            #$ht."${value}".InvokeWithContext($null, [PSVariable]::New("_", $value))
+            $ht."${value}".Invoke()
+            return
+        }
+
         if ($defaultHandler -ne $null) {
             $defaultHandler.Invoke()
         }
-
-        return
-    }
-
-    $value = $target."${propertyName}"
-    if (!($value -is [string])) {
-        if ($defaultHandler -ne $null) {
-            $defaultHandler.Invoke()
-        }
-
-        return
-    }
-
-    $value = $value.Trim().ToLower()
-
-    if ($ht.Contains($value)) {
-        switch ($value) {
-            "enable" {
-                atn_core_log "Enable: ${propertyName}"
-            }
-
-            "disable" {
-                atn_core_log "Disable: ${propertyName}"
-            }
-
-            "show" {
-                atn_core_log "Show: ${propertyName}"
-            }
-
-            "hide" {
-                atn_core_log "Hide: ${propertyName}"
-            }
-
-            "allow" {
-                atn_core_log "Allow: ${propertyName}"
-            }
-
-            "deny" {
-                atn_core_log "Deny: ${propertyName}"
-            }
-
-            "remove" {
-                atn_core_log "Remove: ${propertyName}"
-            }
-
-            "remove_completely" {
-                atn_core_log "Remove: ${propertyName}"
-            }
-        }
-
-        #$ht."${value}".InvokeWithContext($null, [PSVariable]::New("_", $value))
-        $ht."${value}".Invoke()
-        return
-    }
-
-    if ($defaultHandler -ne $null) {
-        $defaultHandler.Invoke()
     }
 }
 
-Export-ModuleMember -Function atn_core_eval_rule
+Export-ModuleMember -Function wdCoreEvalRule
 
 #
 # Registry
@@ -130,13 +159,13 @@ Export-ModuleMember -Function atn_core_eval_rule
 
 $REG_HISTORY = @{}
 
-function atn_core_test_registry_value {
+function wdCoreTestRegValue {
     [CmdletBinding()]
     param (
         [Alias("PSPath")] [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)] [string] $Path,
         [Parameter(Position = 1, Mandatory = $true)] [string] $Name,
-        [switch] $PassThru
-    ) 
+        [Parameter(Mandatory = $false)] [switch] $PassThru
+    )
 
     process {
         if (!(Test-Path $Path)) {
@@ -156,214 +185,243 @@ function atn_core_test_registry_value {
     }
 }
 
-function atn_core_reg_set {
+function wdCoreRegGet {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)] [string] $Hive,
-        [Parameter(Mandatory=$true)] [string] $Path,
-        [Parameter(Mandatory=$true)] [string] $Name,
-        [Parameter(Mandatory=$true)] [string] $Type,
-        [Parameter(Mandatory=$true)] [object] $Value
+        [Parameter(Mandatory = $true)] [string] $Hive,
+        [Parameter(Mandatory = $true)] [string] $Path,
+        [Parameter(Mandatory = $true)] [string] $Name
     )
 
-    $hiveHistory = $null
-    if ($REG_HISTORY.Contains($Hive)) {
-        $hiveHistory = $REG_HISTORY[$Hive]
+    process {
+        Get-ItemPropertyValue "${Hive}:\\${Path}" "${Name}"
     }
-    else {
-        $hiveHistory = New-Object System.Collections.Generic.List[System.String]
-        $REG_HISTORY[$Hive] = $hiveHistory
-    }
-
-    #if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows\Windows Search")) {
-    #    New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\Windows Search" -Type Folder | Out-Null
-    #}
-
-    $joined = $null
-    foreach ($segment in $Path.Split("\")) {
-        if ($segment.Trim().Length -eq 0) {
-            continue
-        }
-
-        if ($joined -eq $null) {
-            $joined = $segment
-        }
-        else {
-            $joined = "${joined}\${segment}"
-        }
-
-        $joinedWithHive = "${Hive}:\${joined}"
-
-        if ($joined -in $hiveHistory) {
-            continue
-        }
-
-        if (!(Test-Path $joinedWithHive)) {
-            New-Item -Path $joinedWithHive -Type Folder | Out-Null
-        }
-
-        $hiveHistory.Add($joined)
-    }
-
-    Set-ItemProperty -Path "${Hive}:\${joined}" -Name $Name -Type $Type -Value $Value
 }
 
-Export-ModuleMember -Function atn_core_reg_set
+Export-ModuleMember -Function wdCoreRegGet
 
-function atn_core_reg_remove_item {
+function wdCoreRegSet {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)] [string] $Hive,
-        [Parameter(Mandatory=$true)] [string] $Path,
-        [Parameter(Mandatory=$false)] [string] $Name
+        [Parameter(Mandatory = $true)] [string] $Hive,
+        [Parameter(Mandatory = $true)] [string] $Path,
+        [Parameter(Mandatory = $true)] [string] $Name,
+        [Parameter(Mandatory = $true)] [string] $Type,
+        [Parameter(Mandatory = $true)] [object] $Value
     )
 
-    $joined = $null
-    foreach ($segment in $Path.Split("\")) {
-        if ($segment.Trim().Length -eq 0) {
-            continue
-        }
-
-        if ($joined -eq $null) {
-            $joined = $segment
+    process {
+        $hiveHistory = $null
+        if ($REG_HISTORY.Contains($Hive)) {
+            $hiveHistory = $REG_HISTORY[$Hive]
         }
         else {
-            $joined = "${joined}\${segment}"
+            $hiveHistory = New-Object System.Collections.Generic.List[System.String]
+            $REG_HISTORY[$Hive] = $hiveHistory
         }
-    }
 
-    if ($Name -eq $null) {
-        Remove-ItemProperty -Force -LiteralPath "${Hive}:\${joined}" -ErrorAction SilentlyContinue
-        return
-    }
+        #if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows\Windows Search")) {
+        #    New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\Windows Search" -Type Folder | Out-Null
+        #}
 
-    Remove-ItemProperty -Force -LiteralPath "${Hive}:\${joined}" -Name $Name -ErrorAction SilentlyContinue
+        $joined = $null
+        foreach ($segment in $Path.Split("\")) {
+            if ($segment.Trim().Length -eq 0) {
+                continue
+            }
+
+            if ($joined -eq $null) {
+                $joined = $segment
+            }
+            else {
+                $joined = "${joined}\${segment}"
+            }
+
+            $joinedWithHive = "${Hive}:\${joined}"
+
+            if ($joined -in $hiveHistory) {
+                continue
+            }
+
+            if (!(Test-Path $joinedWithHive)) {
+                New-Item -Path $joinedWithHive -Type Folder | Out-Null
+            }
+
+            $hiveHistory.Add($joined)
+        }
+
+        Set-ItemProperty -Path "${Hive}:\${joined}" -Name $Name -Type $Type -Value $Value
+    }
 }
 
-Export-ModuleMember -Function atn_core_reg_remove_item
+Export-ModuleMember -Function wdCoreRegSet
 
+function wdCoreRegDelete {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)] [string] $Hive,
+        [Parameter(Mandatory = $true)] [string] $Path,
+        [Parameter(Mandatory = $false)] [string] $Name
+    )
+
+    process {
+        $joined = $null
+        foreach ($segment in $Path.Split("\")) {
+            if ($segment.Trim().Length -eq 0) {
+                continue
+            }
+
+            if ($joined -eq $null) {
+                $joined = $segment
+            }
+            else {
+                $joined = "${joined}\${segment}"
+            }
+        }
+
+        if ($Name -eq $null) {
+            Remove-ItemProperty -Force -LiteralPath "${Hive}:\${joined}" -ErrorAction SilentlyContinue
+            return
+        }
+
+        Remove-ItemProperty -Force -LiteralPath "${Hive}:\${joined}" -Name $Name -ErrorAction SilentlyContinue
+    }
+}
+
+Export-ModuleMember -Function wdCoreRegDelete
 
 #
 # Miscellaneous
 #
 
-function atn_core_logbase {
+function wdCoreLogImpl {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$false)] [string] $ForegroundColor,
-        #[Parameter(Mandatory=$false)] [switch] $IsError,
-        [Parameter(Mandatory=$true)] [string] $Format,
-        [Parameter(Mandatory=$false)] [object[]] $Args
+        [Parameter(Mandatory = $false)] [string] $ForegroundColor,
+        #[Parameter(Mandatory = $false)] [switch] $IsError,
+        [Parameter(Mandatory = $true)] [string] $Format,
+        [Parameter(Mandatory = $false)] [object[]] $Args
     )
 
-    $result = $null
-    if ($Args -eq $null) {
-        $result = [string]::Format($Format)
-    }
-    else {
-        $result = [string]::Format($Format, $Args)
-    }
+    process {
+        $result = $null
+        if ($Args -eq $null) {
+            $result = [string]::Format($Format)
+        }
+        else {
+            $result = [string]::Format($Format, $Args)
+        }
 
-    <#
-    if ($IsError) {
-        Write-Error $result
-        return
-    }
-    #>
+        <#
+        if ($IsError) {
+            Write-Error $result
+            return
+        }
+        #>
 
-    if ($ForegroundColor) {
-        Write-Host $result -ForegroundColor $ForegroundColor
-    }
-    else {
-        Write-Host $result
+        if ($ForegroundColor) {
+            Write-Host $result -ForegroundColor $ForegroundColor
+        }
+        else {
+            Write-Host $result
+        }
     }
 }
 
-function atn_core_log {
+function wdCoreLog {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true, Position = 0)] [string] $format,
+        [Parameter(Mandatory = $true, Position = 0)] [string] $format,
         [Parameter(ValueFromRemainingArguments = $true)] [object[]] $args
     )
 
-    atn_core_logbase -Format $format -Args $args
+    process {
+        wdCoreLogImpl -Format $format -Args $args
+    }
 }
 
-function atn_core_log_success {
+function wdCoreLogSuccess {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true, Position = 0)] [string] $format,
+        [Parameter(Mandatory = $true, Position = 0)] [string] $format,
         [Parameter(ValueFromRemainingArguments = $true)] [object[]] $args
     )
 
-    atn_core_logbase -ForegroundColor "Green" -Format $format -Args $args
+    process {
+        wdCoreLogImpl -ForegroundColor "Green" -Format $format -Args $args
+    }
 }
 
-function atn_core_log_warning {
+function wdCoreLogWarning {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true, Position = 0)] [string] $format,
+        [Parameter(Mandatory = $true, Position = 0)] [string] $format,
         [Parameter(ValueFromRemainingArguments = $true)] [object[]] $args
     )
 
-    atn_core_logbase -ForegroundColor "Yellow" -Format $format -Args $args
+    process {
+        wdCoreLogImpl -ForegroundColor "Yellow" -Format $format -Args $args
+    }
 }
 
-Export-ModuleMember -Function atn_core_log
-Export-ModuleMember -Function atn_core_log_success
-Export-ModuleMember -Function atn_core_log_warning
+Export-ModuleMember -Function wdCoreLog
+Export-ModuleMember -Function wdCoreLogSuccess
+Export-ModuleMember -Function wdCoreLogWarning
 
-function atn_core_where {
+function wdCoreWhere {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true, Position = 0)] [string] $name
+        [Parameter(Mandatory = $true, Position = 0)] [string] $name
     )
 
-    #where.exe $name
-    return (Get-Command $name).Path
+    process {
+        (Get-Command $name -ErrorAction SilentlyContinue).Path
+    }
 }
 
-Export-ModuleMember -Function atn_core_where
+Export-ModuleMember -Function wdCoreWhere
 
-function atn_core_enum_env_vars {
+function wdCoreEnumEnvVars {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true)] [string[]] $Target # Machine, User
+        [Parameter(Mandatory = $true)] [string[]] $Target # Machine, User
     )
-
+    
     # Machine: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment
     # User: HKEY_CURRENT_USER\Environment
 
-    return [Environment]::GetEnvironmentVariables($Target).GetEnumerator() | Sort-Object Name
+    process {
+        [Environment]::GetEnvironmentVariables($Target).GetEnumerator() | Sort-Object Name
+    }
 }
 
-Export-ModuleMember -Function atn_core_enum_env_vars
+Export-ModuleMember -Function wdCoreEnumEnvVars
 
-function atn_core_enum_env_path {
+function wdCoreEnumEnvPath {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true)] [string[]] $Target,
-        [Parameter(Mandatory=$false)] [switch] $Sort
+        [Parameter(Mandatory = $true)] [string[]] $Target,
+        [Parameter(Mandatory = $false)] [switch] $Sort
     )
 
-    $results = atn_core_enum_env_vars -Target $Target | Where-Object {$_.Name -eq "Path"} | Select-Object -ExpandProperty Value | ForEach-Object {$_.Split(";")} | Where-Object {$_.Length -gt 0}
-    if ($Sort) {
-        $results = $results | Sort-Object
-    }
+    process {
+        $results = wdCoreEnumEnvVars -Target $Target | Where-Object {$_.Name -eq "Path"} | Select-Object -ExpandProperty Value | ForEach-Object {$_.Split(";")} | Where-Object {$_.Length -gt 0}
+        if ($Sort) {
+            $results = $results | Sort-Object
+        }
 
-    return $results
+        $results
+    }
 }
 
-Export-ModuleMember -Function atn_core_enum_env_path
+Export-ModuleMember -Function wdCoreEnumEnvPath
 
-
-
-function atn_core_fs_change_attributes () {
+function wdCoreFSMergeAttributes () {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true)] [string] $Filename,
-        [Parameter(Mandatory=$false)] [switch] $Hidden,
-        [Parameter(Mandatory=$false)] [switch] $System
+        [Parameter(Mandatory = $true)] [string] $Filename,
+        [Parameter(Mandatory = $false)] [switch] $Hidden,
+        [Parameter(Mandatory = $false)] [switch] $System
     )
 
     process {
@@ -379,21 +437,22 @@ function atn_core_fs_change_attributes () {
     }
 }
 
-Export-ModuleMember -Function atn_core_fs_change_attributes
+Export-ModuleMember -Function wdCoreFSMergeAttributes
 
-
-function atn_core_fs_link () {
+function wdCoreFSLink () {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true)] [string] $Source,
-        [Parameter(Mandatory=$true)] [string] $Target
+        [Parameter(Mandatory = $true)] [string] $Source,
+        [Parameter(Mandatory = $true)] [string] $Target
     )
 
-    if (Test-Path $Source) {
-        Remove-Item -Path $Source -Force | Out-Null
-    }
+    process {
+        if (Test-Path $Source) {
+            Remove-Item -Path $Source -Force | Out-Null
+        }
 
-    New-Item -ItemType SymbolicLink -Path $Source -Target $Target | Out-Null
+        New-Item -ItemType SymbolicLink -Path $Source -Target $Target | Out-Null
+    }
 }
 
-Export-ModuleMember -Function atn_core_fs_link
+Export-ModuleMember -Function wdCoreFSLink

@@ -1,87 +1,112 @@
-[System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
-param()
-
-Import-Module $PSScriptRoot\core.psm1
+Import-Module $PSScriptRoot\core.psm1 -DisableNameChecking
 
 #$PSModuleAutoLoadingPreference = "All"
 
-$appInstallationHandlers = @{}
-$appPersonalizationHandlers = @{}
+function wdInstallApplication {
+    [CmdletBinding()]
+    param (
+        [Parameter(Position = 0, Mandatory = $true)] [object] $appId,
+        [Parameter(Position = 1, Mandatory = $true)] [object] $profile
+    )
 
-$appModules = Get-Module -Name "${PSScriptRoot}\apps\*.psm1" -ListAvailable
-foreach ($appModule in $appModules) {
-    Import-Module $appModule -Force
-    $appId = "$($appModule.Name)"
-    #Write-Host $appId
+    process {
+        if (-not $appInstallationHandlers.Contains($appId)) {
+            wdCoreLogWarning "Installation routine for ${appId} does not exist"
+            return
+        }
 
-    $appInstallationHandler = Get-Command -Module $appModule | Where-Object {$_.Name -eq "atn_install_${appId}"} | Select -First 1
-    if ($appInstallationHandler -ne $null) {
-        $appInstallationHandlers[$appId] = $appInstallationHandler
-    }
+        $handler = $appInstallationHandlers[$appId]
+        wdCoreLog "Installing ${appId} ..."
 
-    $appPersonalizationHandler = Get-Command -Module $appModule | Where-Object {$_.Name -eq "atn_personalize_${appId}"} | Select -First 1
-    if ($appPersonalizationHandler -ne $null) {
-        $appPersonalizationHandlers[$appId] = $appPersonalizationHandler
+        & $handler $profile
     }
 }
 
-function atn_install_application ($appId, $profile) {
-    if (-not $appInstallationHandlers.Contains($appId)) {
-        atn_core_log_warning "Installation routine for ${appId} does not exist"
-        return
+Export-ModuleMember -Function wdInstallApplication
+
+function wdPersonalizeApplication {
+    [CmdletBinding()]
+    param (
+        [Parameter(Position = 0, Mandatory = $true)] [object] $AppID,
+        [Parameter(Position = 1, Mandatory = $true)] [object] $Profile,
+        [Parameter(Mandatory = $false)] [int] $Level = 1
+    )
+
+    process {
+        if (-not $appPersonalizationHandlers.Contains($AppID)) {
+            wdCoreLogWarning "Personalization routine for ${AppID} does not exist"
+            return
+        }
+
+        $handler = $appPersonalizationHandlers[$AppID]
+        wdCoreLog "Personalizing ${AppID} ..."
+
+        & $handler $Profile -Level $Level
     }
-
-    $handler = $appInstallationHandlers[$appId]
-    atn_core_log "Installing ${appId} ..."
-
-    & $handler $profile
 }
 
-Export-ModuleMember -Function atn_install_application
+Export-ModuleMember -Function wdPersonalizeApplication
 
-function atn_personalize_application ($appId, $profile) {
-    if (-not $appPersonalizationHandlers.Contains($appId)) {
-        atn_core_log_warning "Personalization routine for ${appId} does not exist"
-        return
-    }
-
-    $handler = $appPersonalizationHandlers[$appId]
-    atn_core_log "Personalizing ${appId} ..."
-
-    & $handler $profile
-}
-
-Export-ModuleMember -Function atn_personalize_application
-
-function atn_eval_profile_apps {
+function wdEvalProfileAppsConfig {
     [CmdletBinding()]
     param (
         [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)] [object] $profile,
-        [Parameter(Mandatory = $false)] [switch] $PersonalizeOnly = $false
+        [Parameter(Mandatory = $false)] [switch] $PersonalizeOnly = $false,
+        [Parameter(Mandatory = $false)] [int] $PersonalizeLevel = 1
     )
 
-    $list = $profile."Rules"."Applications"
-    if ($list -eq $null) {
-        atn_core_log "Profile does not have rules for: Applications"
-        return
-    }
-
-    foreach ($listprop in $list.PSObject.Properties) {
-        $appId = $listprop.Name
-        $rule = $listprop.Value
-
-        if ($rule -is [string]) {
-            $rule = $rule.Trim().ToLower()
+    process {
+        $list = $profile."Rules"."Applications"
+        if ($list -eq $null) {
+            wdCoreLog "Profile does not have rules for: Applications"
+            return
         }
 
-        if ($rule -eq "install_full") {
-            if ($PersonalizeOnly -eq $false) {
-                atn_install_application $appId $profile
+        $appInstallationHandlers = @{}
+        $appPersonalizationHandlers = @{}
+
+        wdCoreLog "Loading app modules ..."
+
+        foreach ($listprop in $list.PSObject.Properties) {
+            $appId = $listprop.Name
+            $rule = $listprop.Value
+            if ($rule -eq $false) {
+                continue
             }
 
-            atn_personalize_application $appId $profile
+            $modulePath = "${PSScriptRoot}\apps\${appId}.psm1"
+            #wdCoreLog "Loading app module ${modulePath}"
+
+            $moduleHandle = Get-Module -Name $modulePath -ListAvailable
+            $module = Import-Module $moduleHandle -DisableNameChecking -AsCustomObject -PassThru
+
+            $hook = Get-Command -Module $module | Where-Object {$_.Name -eq "hook"} | Select -First 1
+
+            if ($hook -ne $null) {
+                & $hook -InstallationHandlers $appInstallationHandlers -ConfigurationHandlers $appPersonalizationHandlers
+            }
         }
+
+        wdCoreLog "Done"
+
+        foreach ($listprop in $list.PSObject.Properties) {
+            $appId = $listprop.Name
+            $rule = $listprop.Value
+
+            if ($rule -is [string]) {
+                $rule = $rule.Trim().ToLower()
+            }
+
+            if ($rule -eq $true) {
+                if ($PersonalizeOnly -eq $false) {
+                    wdInstallApplication $appId $profile
+                }
+
+                wdPersonalizeApplication $appId $profile -Level $PersonalizeLevel
+            }
+        }
+
     }
 }
 
-Export-ModuleMember -Function atn_eval_profile_apps
+Export-ModuleMember -Function wdEvalProfileAppsConfig

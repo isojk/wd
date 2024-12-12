@@ -1,15 +1,42 @@
-[System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
-param()
+Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking
 
-Import-Module $PSScriptRoot\..\core.psm1
+$APP_ID = "everything"
 
-function atn_install_everything {
-    choco install -y everything
+function hook {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)] [object] $InstallationHandlers,
+        [Parameter(Mandatory = $true)] [object] $ConfigurationHandlers
+    )
+
+    process {
+        $InstallationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $profile
+            )
+
+            process {
+                choco install -y everything
+            }
+        }
+
+        $ConfigurationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $Profile,
+                [Parameter(Mandatory = $false)] [int] $Level = 1
+            )
+
+            process {
+                $data = (wdCoreGetDataDir)
+                $private = (wdCoreGetPrivateDataDir)
+
+                # @TODO
+            }
+        }
+    }
 }
 
-function atn_personalize_everything {
-    $data = (atn_core_get_data_dir)
-    $private = (atn_core_get_private_data_dir)
-}
+Export-ModuleMember -Function hook
 
-Export-ModuleMember -Function *

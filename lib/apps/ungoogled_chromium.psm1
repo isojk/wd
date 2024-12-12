@@ -1,28 +1,46 @@
-[System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
-param()
+Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking
 
-Import-Module $PSScriptRoot\..\core.psm1
+$APP_ID = "ungoogled_chromium"
 
-function atn_install_ungoogled_chromium {
-}
+function hook {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)] [object] $InstallationHandlers,
+        [Parameter(Mandatory = $true)] [object] $ConfigurationHandlers
+    )
 
-function atn_personalize_ungoogled_chromium {
-    $data = (atn_core_get_data_dir)
-    $private = (atn_core_get_private_data_dir)
+    process {
+        $InstallationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $profile
+            )
 
-    #
-    # Private
-    #
+            process {
+                # @TODO
+            }
+        }
 
-    $ungchr_userdata = "${Env:LOCALAPPDATA}\Chromium\User Data\Default\"
+        $ConfigurationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $Profile,
+                [Parameter(Mandatory = $false)] [int] $Level = 1
+            )
 
-    # links bookmarks
+            process {
+                $data = (wdCoreGetDataDir)
+                $private = (wdCoreGetPrivateDataDir)
+                $ungchr_userdata = "${Env:LOCALAPPDATA}\Chromium\User Data\Default\"
 
-    if (Test-Path "${ungchr_userdata}\Bookmarks") {
-        Remove-Item -Path "${ungchr_userdata}\Bookmarks" -Recurse -Force | Out-Null
+                # link private bookmarks
+                # @TODO
+                if (Test-Path "${private}\ungoogled_chromium") {
+                    wdCoreFSLink -Source "${ungchr_userdata}\Bookmarks" -Target "${private}\ungoogled_chromium\bookmarks.json"
+                }
+            }
+        }
     }
-    
-    New-Item -ItemType SymbolicLink -Path "${ungchr_userdata}\Bookmarks" -Target "${private}\ungoogled_chromium\bookmarks.json" | Out-Null
 }
 
-Export-ModuleMember -Function *
+Export-ModuleMember -Function hook

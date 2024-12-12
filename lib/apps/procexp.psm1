@@ -1,15 +1,41 @@
-[System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
-param()
+Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking
 
-Import-Module $PSScriptRoot\..\core.psm1
+$APP_ID = "procexp"
 
-function atn_install_procexp {
-    choco install -y procexp
+function hook {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)] [object] $InstallationHandlers,
+        [Parameter(Mandatory = $true)] [object] $ConfigurationHandlers
+    )
+
+    process {
+        $InstallationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $profile
+            )
+
+            process {
+                choco install -y procexp
+            }
+        }
+
+        $ConfigurationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $Profile,
+                [Parameter(Mandatory = $false)] [int] $Level = 1
+            )
+
+            process {
+                $data = (wdCoreGetDataDir)
+                $private = (wdCoreGetPrivateDataDir)
+
+                # @TODO
+            }
+        }
+    }
 }
 
-function atn_personalize_procexp {
-    $data = (atn_core_get_data_dir)
-    $private = (atn_core_get_private_data_dir)
-}
-
-Export-ModuleMember -Function *
+Export-ModuleMember -Function hook

@@ -1,16 +1,41 @@
-[System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
-param()
+Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking
 
-Import-Module $PSScriptRoot\..\core.psm1
+$APP_ID = "ffmpeg"
 
-function atn_install_ffmpeg {
-    winget install --id Gyan.FFmpeg.Shared
+function hook {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)] [object] $InstallationHandlers,
+        [Parameter(Mandatory = $true)] [object] $ConfigurationHandlers
+    )
+
+    process {
+        $InstallationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $profile
+            )
+
+            process {
+                winget install --id Gyan.FFmpeg.Shared
+            }
+        }
+
+        $ConfigurationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $Profile,
+                [Parameter(Mandatory = $false)] [int] $Level = 1
+            )
+
+            process {
+                $data = (wdCoreGetDataDir)
+                $private = (wdCoreGetPrivateDataDir)
+
+                # @TODO
+            }
+        }
+    }
 }
 
-function atn_personalize_ffmpeg {
-    $data = (atn_core_get_data_dir)
-    $private = (atn_core_get_private_data_dir)
-}
-
-Export-ModuleMember -Function *
-
+Export-ModuleMember -Function hook

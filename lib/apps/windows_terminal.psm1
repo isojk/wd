@@ -1,25 +1,47 @@
-[System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
-param()
+Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking
 
-Import-Module $PSScriptRoot\..\core.psm1
+$APP_ID = "windows_terminal"
 
-function atn_install_windows_terminal {
-    winget install --id Microsoft.WindowsTerminal -e --accept-package-agreements --accept-source-agreements
-}
+function hook {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)] [object] $InstallationHandlers,
+        [Parameter(Mandatory = $true)] [object] $ConfigurationHandlers
+    )
 
-function atn_personalize_windows_terminal {
-    $data = (atn_core_get_data_dir)
-    $private = (atn_core_get_private_data_dir)
+    process {
+        $InstallationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $profile
+            )
 
-    $terminal_appdata = "$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
-    $terminal_settings_filename = "settings.json"
-    $terminal_dotfiles = "$data\windows_terminal"
+            process {
+                winget install --id Microsoft.WindowsTerminal -e --accept-package-agreements --accept-source-agreements
+            }
+        }
 
-    if (Test-Path "${terminal_appdata}\${terminal_settings_filename}") {
-        Remove-Item -Path "${terminal_appdata}\${terminal_settings_filename}" -Force | Out-Null
+        $ConfigurationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $Profile,
+                [Parameter(Mandatory = $false)] [int] $Level = 1
+            )
+
+            process {
+                $data = (wdCoreGetDataDir)
+                $private = (wdCoreGetPrivateDataDir)
+
+                $terminal_appdata = "$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
+                $terminal_settings_filename = "settings.json"
+                $terminal_dotfiles = "$data\windows_terminal"
+
+                # link terminal settings
+                wdCoreFSLink -Source "${terminal_appdata}\${terminal_settings_filename}" -Target "${terminal_dotfiles}\${terminal_settings_filename}"
+            }
+        }
     }
-
-    New-Item -ItemType SymbolicLink -Path "${terminal_appdata}\${terminal_settings_filename}" -Target "${terminal_dotfiles}\${terminal_settings_filename}" | Out-Null
 }
 
-Export-ModuleMember -Function *
+Export-ModuleMember -Function hook
+

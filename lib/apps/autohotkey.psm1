@@ -1,27 +1,47 @@
-[System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
-param()
+Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking
 
-Import-Module $PSScriptRoot\..\core.psm1
+$APP_ID = "autohotkey"
 
-function atn_install_autohotkey {
-}
+function hook {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)] [object] $InstallationHandlers,
+        [Parameter(Mandatory = $true)] [object] $ConfigurationHandlers
+    )
 
-function atn_personalize_autohotkey {
-    $data = (atn_core_get_data_dir)
-    $private = (atn_core_get_private_data_dir)
-    $ahk_default_filename = "AutoHotkey.ahk"
+    process {
+        $InstallationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $profile
+            )
 
-    # Suppress startup info
-    atn_core_reg_set -Hive "HKCU" -Path "Software\AutoHotkey\Dash" -Name "SuppressIntro" -Type DWord -Value 1
+            process {
+                # @TODO
+            }
+        }
 
-    # Link default .ahk file to startup dir
-    $startupdir = Get-ItemPropertyValue "HKCU:\\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" "Startup"
+        $ConfigurationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $Profile,
+                [Parameter(Mandatory = $false)] [int] $Level = 1
+            )
 
-    if (Test-Path "${startupdir}\${ahk_default_filename}") {
-        Remove-Item -Path "${startupdir}\${ahk_default_filename}" -Force | Out-Null
+            process {
+                $data = (wdCoreGetDataDir)
+                $private = (wdCoreGetPrivateDataDir)
+                $ahk_default_filename = "AutoHotkey.ahk"
+
+                # Suppress startup info
+                wdCoreRegSet -Hive "HKCU" -Path "Software\AutoHotkey\Dash" -Name "SuppressIntro" -Type DWord -Value 1
+
+                # Link default .ahk file to startup dir
+                $startupdir = wdCoreRegGet -Hive "HKCU" -Path "Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Startup"
+                wdCoreFSLink -Source "${startupdir}\${ahk_default_filename}" -Target "${data}\autohotkey\${ahk_default_filename}"
+            }
+        }
     }
-
-    New-Item -ItemType SymbolicLink -Path "${startupdir}\${ahk_default_filename}" -Target "${data}\autohotkey\${ahk_default_filename}" | Out-Null
 }
 
-Export-ModuleMember -Function *
+Export-ModuleMember -Function hook

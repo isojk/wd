@@ -1,23 +1,47 @@
-[System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
-param()
+Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking
 
-Import-Module $PSScriptRoot\..\core.psm1
+$APP_ID = "git"
 
-function atn_install_git ($profile) {
-    # @TODO
-}
+function hook {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)] [object] $InstallationHandlers,
+        [Parameter(Mandatory = $true)] [object] $ConfigurationHandlers
+    )
 
-function atn_personalize_git ($profile) {
-    $data = (atn_core_get_data_dir)
-    $private = (atn_core_get_private_data_dir)
+    process {
+        $InstallationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $profile
+            )
 
-    atn_core_fs_link -Source "${Env:USERPROFILE}\.gitconfig" -Target "$data\.gitconfig"
+            process {
+                # @TODO
+            }
+        }
 
-    # Change file attributes
-    atn_core_fs_change_attributes -Filename "${Env:USERPROFILE}\.gitconfig" -Hidden
-    if (Test-Path "${Env:USERPROFILE}\.local.gitconfig") {
-        atn_core_fs_change_attributes -Filename "${Env:USERPROFILE}\.local.gitconfig" -Hidden
+        $ConfigurationHandlers[$APP_ID] = {
+            [CmdletBinding()]
+            param (
+                [Parameter(Position = 0, Mandatory = $true)] [object] $Profile,
+                [Parameter(Mandatory = $false)] [int] $Level = 1
+            )
+
+            process {
+                $data = (wdCoreGetDataDir)
+                $private = (wdCoreGetPrivateDataDir)
+
+                wdCoreFSLink -Source "${Env:USERPROFILE}\.gitconfig" -Target "$data\.gitconfig"
+
+                # Change file attributes
+                wdCoreFSMergeAttributes -Filename "${Env:USERPROFILE}\.gitconfig" -Hidden
+                if (Test-Path "${Env:USERPROFILE}\.local.gitconfig") {
+                    wdCoreFSMergeAttributes -Filename "${Env:USERPROFILE}\.local.gitconfig" -Hidden
+                }
+            }
+        }
     }
 }
 
-Export-ModuleMember -Function *
+Export-ModuleMember -Function hook
