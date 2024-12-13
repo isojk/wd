@@ -10,8 +10,14 @@ $repositoryUrl = "https://github.com/isojk/wd"
 
 # Download trunk archive from GitHub to user temporary directory
 
+if (Test-Path $tmpBase) {
+    Remove-Item -Recurse -Force $tmpBase
+}
+
+New-Item -ItemType Directory -Force -Path $tmpBase
+
 Write-Host "Downloading temporary archive of the source ..."
-Invoke-WebRequest "https://github.com/isojk/wd/archive/master.zip" -OutFile $tmpArchiveBase
+Invoke-WebRequest "https://github.com/isojk/wd/archive/trunk.zip" -OutFile $tmpArchiveFilename
 Expand-Archive $tmpArchiveFilename -DestinationPath $tmpArchiveBase
 
 # Load essential modules
