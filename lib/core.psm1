@@ -459,3 +459,8 @@ function wdCoreFSLink () {
 }
 
 Export-ModuleMember -Function wdCoreFSLink
+
+#
+# App installation
+#
+

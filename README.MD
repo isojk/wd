@@ -8,7 +8,7 @@ This repository contains:
 
 Use at your own risk
 
-### Bootstraping the scripts on a clean machine
+### Bootstraping the library on a clean machine
 
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString("https://github.com/isojk/wd/blob/trunk/bootstrap.ps1?raw=true"))

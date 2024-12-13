@@ -1,4 +1,5 @@
 Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking -Scope Local
+Import-Module $PSScriptRoot\..\essentials.psm1 -DisableNameChecking -Scope Local
 
 $APP_ID = "total_commander"
 
@@ -17,7 +18,7 @@ function hook {
             )
 
             process {
-                choco install -y totalcommander
+                wdChocoInstallPackage -Id "totalcommander"
             }
         }
 

@@ -74,6 +74,27 @@ function wdChocoInstall {
 
 Export-ModuleMember -Function wdChocoInstall
 
+function wdChocoInstallPackage {
+    [CmdletBinding()]
+    param(
+        [Parameter(Position = 0, Mandatory = $true)] [string] $Id
+    )
+
+    process {
+        if ((wdChocoIsInstalled) -eq $false) {
+            wdCoreLogWarning "Chocolatey must be installed first in order to install ${Id}"
+            return
+        }
+
+        if (wdChocoIsPackageInstalled "${Id}") {
+            wdCoreLog "${Id} is already installed on this machine"
+            return
+        }
+
+        choco install -y "${Id}" #--params "'...'"
+    }
+}
+
 function wdChocoUninstall {
     [CmdletBinding()]
     param()

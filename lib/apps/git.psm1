@@ -18,7 +18,7 @@ function hook {
             )
 
             process {
-                # Installation covered in app module
+                # Installation covered in 'essentials' module
                 wdGitInstall
             }
         }
