@@ -1,9 +1,12 @@
+$BASEDIR = ".wd"
+$BASEDIR_PRIVATE = ".wdp"
+
 function wdCoreGetBasedir {
     [CmdletBinding()]
     param ()
 
     process {
-        Join-Path -Path "${Env:USERPROFILE}" -ChildPath ".wd" -Resolve
+        Join-Path -Path "${Env:USERPROFILE}" -ChildPath $BASEDIR -Resolve
     }
 }
 
@@ -36,7 +39,7 @@ function wdCoreGetPrivateBasedir {
     param ()
 
     process {
-        Join-Path -Path "${Env:USERPROFILE}" -ChildPath ".wdp" -Resolve
+        Join-Path -Path "${Env:USERPROFILE}" -ChildPath $BASEDIR_PRIVATE -Resolve
     }
 }
 

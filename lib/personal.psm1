@@ -1,4 +1,4 @@
-Import-Module $PSScriptRoot\core.psm1 -DisableNameChecking
+Import-Module $PSScriptRoot\core.psm1 -DisableNameChecking -Scope Local
 
 function wdSystemPersonalizeGeneral {
     [CmdletBinding()]

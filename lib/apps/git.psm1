@@ -1,4 +1,5 @@
-Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking
+Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking -Scope Local
+Import-Module $PSScriptRoot\..\essentials.psm1 -DisableNameChecking -Scope Local
 
 $APP_ID = "git"
 
@@ -13,11 +14,12 @@ function hook {
         $InstallationHandlers[$APP_ID] = {
             [CmdletBinding()]
             param (
-                [Parameter(Position = 0, Mandatory = $true)] [object] $profile
+                [Parameter(Position = 0, Mandatory = $true)] [object] $Profile
             )
 
             process {
-                # @TODO
+                # Installation covered in app module
+                wdGitInstall
             }
         }
 
