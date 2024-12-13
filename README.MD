@@ -7,3 +7,9 @@ This repository contains:
 - Application-specific configuration files (in a similar fashion to dotfiles)
 
 Use at your own risk
+
+### Bootstraping the scripts on a clean machine
+
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls13; iex ((New-Object System.Net.WebClient).DownloadString("https://github.com/isojk/wd/blob/trunk/bootstrap.ps1?raw=true"))
+```
