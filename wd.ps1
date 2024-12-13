@@ -12,6 +12,8 @@ $basedir = (wdCoreGetBasedir)
 $data = (wdCoreGetDataDir)
 $private = (wdCoreGetPrivateDataDir)
 
+Write-Host "`$data: ${data}"
+
 [Environment]::SetEnvironmentVariable("DOTFILES", "$data", "User")
 
 $profile = wdLoadProfile "home"

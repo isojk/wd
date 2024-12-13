@@ -6,7 +6,7 @@ function wdCoreGetBasedir {
     param ()
 
     process {
-        Join-Path -Path "${Env:USERPROFILE}" -ChildPath $BASEDIR -Resolve
+        [System.IO.Path]::GetFullPath([System.IO.Path]::Combine("${Env:USERPROFILE}", $BASEDIR))
     }
 }
 
@@ -17,7 +17,7 @@ function wdCoreGetProfilesDir {
     param ()
 
     process {
-        Join-Path -Path "$(& wdCoreGetBasedir)" -ChildPath "profiles" -Resolve
+        [System.IO.Path]::GetFullPath([System.IO.Path]::Combine("$(& wdCoreGetBasedir)", "profiles"))
     }
 }
 
@@ -28,7 +28,7 @@ function wdCoreGetDataDir {
     param ()
 
     process {
-        Join-Path -Path "$(& wdCoreGetBasedir)" -ChildPath "data" -Resolve
+        [System.IO.Path]::GetFullPath([System.IO.Path]::Combine("$(& wdCoreGetBasedir)", "data"))
     }
 }
 
@@ -39,7 +39,7 @@ function wdCoreGetPrivateBasedir {
     param ()
 
     process {
-        Join-Path -Path "${Env:USERPROFILE}" -ChildPath $BASEDIR_PRIVATE -Resolve
+        [System.IO.Path]::GetFullPath([System.IO.Path]::Combine("${Env:USERPROFILE}", $BASEDIR_PRIVATE))
     }
 }
 

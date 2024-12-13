@@ -3,7 +3,8 @@
 [System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
 param()
 
-$tmpBase = "${Env:TEMP}/.wd"
+$tmp = [System.IO.Path]::GetTempPath()
+$tmpBase = "${tmp}/.wd"
 $tmpArchiveFilename = "${tmpBase}/trunk.zip"
 $tmpArchiveBasePart = "${tmpBase}/trunk"
 $tmpArchiveBase = "${tmpArchiveBasePart}/wd-trunk"
@@ -12,10 +13,10 @@ $repositoryUrl = "https://github.com/isojk/wd"
 # Download trunk archive from GitHub to user temporary directory
 
 if (Test-Path $tmpBase) {
-    Remove-Item -Recurse -Force $tmpBase
+    Remove-Item -Recurse -Force $tmpBase | Out-Null
 }
 
-New-Item -ItemType Directory -Force -Path $tmpBase
+New-Item -ItemType Directory -Force -Path $tmpBase | Out-Null
 
 Write-Host "Downloading temporary archive of the source ..."
 Invoke-WebRequest "https://github.com/isojk/wd/archive/trunk.zip" -OutFile $tmpArchiveFilename
@@ -28,16 +29,21 @@ Import-Module $tmpArchiveBase\lib\essentials.psm1 -Force -DisableNameChecking -S
 
 # Install chocolatey
 
-if (wdChocoIsInstalled -eq $false) {
+if ((wdChocoIsInstalled) -eq $false) {
     Write-Host "Installing chocolatey ..."
     wdChocoInstall
 }
 
+Import-Module "$(wdChocoGetInstallDir)\helpers\chocolateyProfile.psm1" -Force -DisableNameChecking -Scope Local
+
+refreshenv
+
 # Install git
 
-if (wdGitIsInstalled -eq $false) {
+if ((wdGitIsInstalled) -eq $false) {
     Write-Host "Installing git ..."
     wdGitInstall
+    refreshenv
 }
 
 # Clone the source into proper destination

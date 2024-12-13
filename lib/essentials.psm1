@@ -109,7 +109,7 @@ function wdGitIsInstalled {
     param()
 
     process {
-        $result = (wdCoreWhere git) -ne $null
+        (wdCoreWhere git) -ne $null
     }
 }
 
@@ -120,7 +120,7 @@ function wdGitInstall {
     param()
 
     process {
-        if (wdChocoIsInstalled -eq $false) {
+        if ((wdChocoIsInstalled) -eq $false) {
             wdCoreLogWarning "Chocolatey must be installed first in order to install git"
             return
         }
@@ -136,7 +136,7 @@ function wdGitInstall {
         }
 
         # https://github.com/chocolatey-community/chocolatey-packages/blob/master/automatic/git.install/ARGUMENTS.md
-        choco install "git.install" --params "'/GitOnlyOnPath /WindowsTerminal /NoShellIntegration /NoCredentialManager /SChannel /Editor:VisualStudioCode'"
+        choco install -y "git.install" --params "'/GitOnlyOnPath /WindowsTerminal /NoShellIntegration /NoCredentialManager /SChannel /Editor:VisualStudioCode'"
     }
 }
 
