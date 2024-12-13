@@ -49,5 +49,9 @@ if ((wdGitIsInstalled) -eq $false) {
 # Clone the source into proper destination
 
 $basedir = wdCoreGetBasedir
-git clone "$repositoryUrl" "$basedir"
 
+if ((Test-Path $basedir) -eq $false) {
+    git clone "$repositoryUrl" "$basedir"
+}
+
+# @TODO Call wd
