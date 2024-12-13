@@ -5,7 +5,8 @@ param()
 
 $tmpBase = "${Env:TEMP}/.wd"
 $tmpArchiveFilename = "${tmpBase}/trunk.zip"
-$tmpArchiveBase = "${tmpBase}/trunk/wd-trunk"
+$tmpArchiveBasePart = "${tmpBase}/trunk"
+$tmpArchiveBase = "${tmpArchiveBasePart}/wd-trunk"
 $repositoryUrl = "https://github.com/isojk/wd"
 
 # Download trunk archive from GitHub to user temporary directory
@@ -18,7 +19,7 @@ New-Item -ItemType Directory -Force -Path $tmpBase
 
 Write-Host "Downloading temporary archive of the source ..."
 Invoke-WebRequest "https://github.com/isojk/wd/archive/trunk.zip" -OutFile $tmpArchiveFilename
-Expand-Archive $tmpArchiveFilename -DestinationPath $tmpArchiveBase
+Expand-Archive $tmpArchiveFilename -DestinationPath $tmpArchiveBasePart
 
 # Load essential modules
 
