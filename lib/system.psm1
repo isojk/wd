@@ -388,11 +388,13 @@ function wdSystemConfigureDefaultApps {
             }
         }
 
+        <#
         wdCoreEvalRule $options "Microsoft Alarms and Clock" @{
             "remove" = {
                 removeAppxPackage -Name "Microsoft.WindowsAlarms"
             }
         }
+        #>
 
         wdCoreEvalRule $options "Microsoft Bing Finance" @{
             "remove" = {
