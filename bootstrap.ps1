@@ -71,4 +71,4 @@ if (Test-Path $basedir) {
 
 git clone "$repositoryUrl" "$basedir"
 
-# @TODO Call wd
+& $basedir\wd.ps1 -FirstRun
