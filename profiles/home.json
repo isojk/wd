@@ -4,6 +4,11 @@
   "Inherits": "default",
   "Rules": {
     "System Configuration" : {
+      "Privacy": {
+        "Defender: Cloud-Based Protection": "disable",
+        "Defender: Automatic sample submission": "disable"
+      },
+
       "General": {
         "WSL": {
           "action": "enable",
