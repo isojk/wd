@@ -720,17 +720,14 @@ function removeOnedrive {
 
         # Remove Onedrive from explorer sidebar
         wdCoreLog "Removing Onedrive from explorer sidebar"
-        if (!(Test-Path "Registry::HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}")) {
-            New-Item -Path "Registry::HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" -Type Folder | Out-Null
+        foreach ($hive in @("HKCU", "HKLM")) {
+            foreach ($clspath in @("CLSID", "Wow6432Node\CLSID")) {
+                foreach ($guid in @("{018D5C66-4533-4307-9B53-224DE2ED1FE6}", "{04271989-C4D2-BF67-95FE-120D1FD1EAE2}")) {
+                    wdCoreRegSet -Hive $hive -Path "Software\Classes\${clspath}\${guid}" -Name "System.IsPinnedToNameSpaceTree" -Type DWord -Value 0
+                    wdCoreRegSet -Hive $hive -Path "Software\Classes\${clspath}\${guid}" -Name "System.IsPinnedToNameSpaceTree" -Type DWord -Value 0
+                }
+            }
         }
-
-        Set-ItemProperty "Registry::HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" "System.IsPinnedToNameSpaceTree" 0
-
-        if (!(Test-Path "Registry::HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}")) {
-            New-Item -Path "Registry::HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" -Type Folder | Out-Null
-        }
-
-        Set-ItemProperty "Registry::HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" "System.IsPinnedToNameSpaceTree" 0
 
         # Remove run option for new users
         wdCoreLog "Removing run option for new users"
