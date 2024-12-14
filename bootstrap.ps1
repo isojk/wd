@@ -7,7 +7,7 @@ $ErrorActionPreference = "Stop"
 
 # Make sure this script is run with administrator privileges
 $currentPrincipal = (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent()))
-if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+if (-not ($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) {
     Write-Error "You must execute this script with administrator privileges"
     exit 1
 }
@@ -24,7 +24,7 @@ $tmpArchiveBase = "${tmpArchiveBasePart}/wd-${branch}"
 
 # Download trunk archive from GitHub to user temporary directory
 
-if (-not Test-Path $tmpBase) {
+if (-not (Test-Path $tmpBase)) {
     New-Item -ItemType Directory -Force -Path $tmpBase | Out-Null
 }
 

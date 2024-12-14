@@ -12,7 +12,7 @@ function wdInstallApplication {
     )
 
     process {
-        if (-not $appInstallationHandlers.Contains($appId)) {
+        if (-not ($appInstallationHandlers.Contains($appId))) {
             wdCoreLogWarning "Installation routine for ${appId} does not exist"
             return
         }
