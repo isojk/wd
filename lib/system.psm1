@@ -776,24 +776,27 @@ function removeOnedrive {
         wdCoreRegSet -Hive "HKCU" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "My Pictures" -Type String -Value "%USERPROFILE%\Pictures"
         wdCoreRegSet -Hive "HKCU" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Personal" -Type String -Value "%USERPROFILE%\Documents"
 
-        if (Test-Path "$Env:USERPROFILE\OneDrive") {
-            if (Test-Path "$Env:USERPROFILE\OneDrive\Desktop") {
-                wdCoreLog "Moving directory: $Env:USERPROFILE\OneDrive\Desktop"
-                Move-Item -Force "$Env:USERPROFILE\OneDrive\Desktop\*" "$Env:USERPROFILE\Desktop"
-            }
+        $dirname = [Environment]::GetEnvironmentVariable("OneDrive", "User")
+        if ($null -ne $dirname) {
+            if (Test-Path "$dirname") {
+                if (Test-Path "$dirname\Desktop") {
+                    wdCoreLog "Moving directory: $dirname\Desktop"
+                    Move-Item -Force "$dirname\Desktop\*" "$Env:USERPROFILE\Desktop"
+                }
 
-            if (Test-Path "$Env:USERPROFILE\OneDrive\Documents") {
-                wdCoreLog "Moving directory: $Env:USERPROFILE\OneDrive\Documents"
-                Move-Item -Force "$Env:USERPROFILE\OneDrive\Documents\*" "$Env:USERPROFILE\Documents"
-            }
+                if (Test-Path "$dirname\Documents") {
+                    wdCoreLog "Moving directory: $dirname\Documents"
+                    Move-Item -Force "$dirname\Documents\*" "$Env:USERPROFILE\Documents"
+                }
 
-            if (Test-Path "$Env:USERPROFILE\OneDrive\Pictures") {
-                wdCoreLog "Moving directory: $Env:USERPROFILE\OneDrive\Pictures"
-                Move-Item -Force "$Env:USERPROFILE\OneDrive\Pictures\*" "$Env:USERPROFILE\Pictures"
-            }
+                if (Test-Path "$dirname\Pictures") {
+                    wdCoreLog "Moving directory: $dirname\Pictures"
+                    Move-Item -Force "$dirname\Pictures\*" "$Env:USERPROFILE\Pictures"
+                }
 
-            wdCoreLog "Removing directory: $Env:USERPROFILE\OneDrive"
-            Remove-Item -Force -Recurse -ErrorAction SilentlyContinue "$Env:USERPROFILE\OneDrive"
+                wdCoreLog "Removing directory: $dirname"
+                Remove-Item -Force -Recurse -ErrorAction SilentlyContinue "$dirname"
+            }
         }
 
         wdCoreLog "Remove OneDrive environment variables"
