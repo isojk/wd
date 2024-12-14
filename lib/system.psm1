@@ -354,8 +354,8 @@ function removeAppxPackage {
     )
 
     process {
-        Get-AppxPackage $Name -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
-        Get-AppXProvisionedPackage -Online | Where DisplayName -Like $Name | Remove-AppxProvisionedPackage -Online -AllUsers -ErrorAction SilentlyContinue
+        Get-AppxPackage $Name | Remove-AppxPackage -ErrorAction SilentlyContinue
+        Get-AppXProvisionedPackage -Online | Where DisplayName -Like $Name | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
     }
 }
 
@@ -388,13 +388,11 @@ function wdSystemConfigureDefaultApps {
             }
         }
 
-        <#
         wdCoreEvalRule $options "Microsoft Alarms and Clock" @{
             "remove" = {
                 removeAppxPackage -Name "Microsoft.WindowsAlarms"
             }
         }
-        #>
 
         wdCoreEvalRule $options "Microsoft Bing Finance" @{
             "remove" = {
