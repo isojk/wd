@@ -1,22 +1,8 @@
 using assembly System.Net.Http
 
+$ErrorActionPreference = "Stop"
+
 Import-Module $PSScriptRoot\core.psm1 -DisableNameChecking -Scope Local
-
-function wdChocoGetInstallDir {
-    [CmdletBinding()]
-    param()
-
-    process {
-        $dir = [Environment]::GetEnvironmentVariable("ChocolateyInstall", "User")
-        if ($dir -eq $null) {
-            $dir = [Environment]::GetEnvironmentVariable("ChocolateyInstall", "Machine")
-        }
-
-        $dir
-    }
-}
-
-Export-ModuleMember -Function wdChocoGetInstallDir
 
 function wdChocoIsInstalled {
     [CmdletBinding()]
@@ -69,6 +55,8 @@ function wdChocoInstall {
         Invoke-Expression -Command $content
 
         Set-ExecutionPolicy $oldep -Scope Process -Force
+
+        wdRefreshEnv
     }
 }
 
@@ -77,7 +65,8 @@ Export-ModuleMember -Function wdChocoInstall
 function wdChocoInstallPackage {
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true)] [string] $Id
+        [Parameter(Position = 0, Mandatory = $true)] [string] $Id,
+        [Parameter(Mandatory = $false)] [string] $Params = $null
     )
 
     process {
@@ -91,7 +80,14 @@ function wdChocoInstallPackage {
             return
         }
 
-        choco install -y "${Id}" #--params "'...'"
+        if ($Params -ne $null -and $Params.Trim().Length -gt 0) {
+            choco install -y "${Id}" --params "'$(Params.Trim())'"
+        }
+        else {
+            choco install -y "${Id}"
+        }
+
+        wdRefreshEnv
     }
 }
 
@@ -141,23 +137,13 @@ function wdGitInstall {
     param()
 
     process {
-        if ((wdChocoIsInstalled) -eq $false) {
-            wdCoreLogWarning "Chocolatey must be installed first in order to install git"
-            return
-        }
-
-        if (wdChocoIsPackageInstalled "git.install") {
-            wdCoreLog "git already installed on this machine"
-            return
-        }
-
         if (wdGitIsInstalled) {
             wdCoreLog "git already installed on this machine using standalone installer"
             return
         }
 
         # https://github.com/chocolatey-community/chocolatey-packages/blob/master/automatic/git.install/ARGUMENTS.md
-        choco install -y "git.install" --params "'/GitOnlyOnPath /WindowsTerminal /NoShellIntegration /NoCredentialManager /SChannel /Editor:VisualStudioCode'"
+        wdChocoInstallPackage -Id "git.install" -Params "/GitOnlyOnPath /WindowsTerminal /NoShellIntegration /NoCredentialManager /SChannel /Editor:VisualStudioCode"
     }
 }
 

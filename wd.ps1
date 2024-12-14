@@ -1,6 +1,15 @@
 [System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
 param()
 
+$ErrorActionPreference = "Stop"
+
+# Make sure this script is run with administrator privileges
+$currentPrincipal = (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent()))
+if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Error "You must execute this script with administrator privileges"
+    exit 1
+}
+
 Import-Module $PSScriptRoot\lib\apps.psm1 -Force -DisableNameChecking -Scope Local
 Import-Module $PSScriptRoot\lib\core.psm1 -Force -DisableNameChecking -Scope Local
 Import-Module $PSScriptRoot\lib\essentials.psm1 -Force -DisableNameChecking -Scope Local

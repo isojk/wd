@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop"
+
 Import-Module $PSScriptRoot\core.psm1 -DisableNameChecking -Scope Local
 
 #$PSModuleAutoLoadingPreference = "All"

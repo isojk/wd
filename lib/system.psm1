@@ -1,5 +1,7 @@
 Import-Module $PSScriptRoot\core.psm1 -DisableNameChecking -Scope Local
 
+$ErrorActionPreference = "Stop"
+
 function wdSystemConfigurePrivacy {
     [CmdletBinding()]
     param (

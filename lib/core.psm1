@@ -1,5 +1,43 @@
+$ErrorActionPreference = "Stop"
+
 $BASEDIR = ".wd"
 $BASEDIR_PRIVATE = ".wdp"
+
+function wdChocoGetInstallDir {
+    [CmdletBinding()]
+    param()
+
+    process {
+        $dir = [Environment]::GetEnvironmentVariable("ChocolateyInstall", "User")
+        if ($dir -eq $null) {
+            $dir = [Environment]::GetEnvironmentVariable("ChocolateyInstall", "Machine")
+        }
+
+        $dir
+    }
+}
+
+Export-ModuleMember -Function wdChocoGetInstallDir
+
+$CHOCO_HELPER_LOADED = $false
+
+function wdRefreshEnv {
+    [CmdletBinding()]
+    param ()
+
+    process {
+        if ($CHOCO_HELPER -eq $null) {
+            $chocoInstallDir = (wdChocoGetInstallDir)
+            $chocoHelperModulePath = "${chocoInstallDir}/helpers/chocolateyProfile.psm1"
+            Import-Module $chocoHelperModulePath -Force -DisableNameChecking -Scope Local
+            $CHOCO_HELPER_LOADED = $true
+        }
+
+        refreshenv
+    }
+}
+
+Export-ModuleMember -Function wdRefreshEnv
 
 function wdCoreGetBasedir {
     [CmdletBinding()]
