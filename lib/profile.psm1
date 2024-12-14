@@ -5,12 +5,12 @@ $ErrorActionPreference = "Stop"
 function wdLoadProfileContent {
     [CmdletBinding()]
     param (
-        [Parameter(Position = 0, Mandatory = $true)] [string] $id
+        [Parameter(Position = 0, Mandatory = $true)] [string] $Id
     )
 
     process {
         $dir = wdCoreGetProfilesDir
-        $filename = "${id}.json"
+        $filename = "${Id}.json"
         $fullpath = Join-Path -Path $dir -ChildPath $filename
         if (!(Test-Path $fullpath -PathType Leaf)) {
             wdCoreLogWarning "File '${fullpath}' does not exist"
@@ -24,13 +24,13 @@ function wdLoadProfileContent {
 function wdLoadProfile {
     [CmdletBinding()]
     param (
-        [Parameter(Position = 0, Mandatory = $true)] [string] $id
+        [Parameter(Position = 0, Mandatory = $true)] [string] $Id
     )
 
     process {
-        $base = wdLoadProfileContent $id
+        $base = wdLoadProfileContent $Id
         if ($base -eq $null) {
-            wdCoreLogWarning "Unable to load profile '${id}'"
+            Write-Error "Unable to load profile '${Id}'"
             return $null
         }
 

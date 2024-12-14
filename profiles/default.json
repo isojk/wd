@@ -56,6 +56,8 @@
       },
 
       "Default Applications": {
+        "Microsoft OneDrive": "remove_completely",
+
         "Microsoft 3D Builder": "remove",
         "Microsoft Alarms and Clock": "remove",
         "Microsoft Bing Finance": "remove",
@@ -85,7 +87,6 @@
         "Microsoft Xbox": "remove",
         "Microsoft Your Phone": "remove",
         "Microsoft Windows Media Player": "disable",
-        "Microsoft OneDrive": "remove_completely",
         "Adobe Creative Cloud Express": "remove",
         "Amazon Prime Video": "remove",
         "Autodesk Sketch book": "remove",
@@ -111,16 +112,11 @@
         "Superfetch": "disable",
         "WiFi Sense": "disable",
         "WSL": {
-          "action": "enable",
-          "distributions": [
-            {
-              "name": "Debian"
-            }
-          ]
+          "action": "disable"
         }
       },
 
-      "Junk": {
+      "Post-Process": {
         "Contacts (user profile)": "remove",
         "Favorites (user profile)": "remove",
         "Links (user profile)": "remove",
@@ -167,15 +163,7 @@
         "Titlebar: Theme colors on titlebar": "skip",
         "Recycle Bin: Delete Confirmation Dialog": "enable",
         "Align taskbar left": "enable",
-        "Show recently added apps": "disable",
-
-        "Context Menu": {
-          "Include in library": "skip",
-          "Pin to Start": "skip",
-          "Give access to": "skip",
-          "Scan with Microsoft Defender": "skip",
-          "Send To": "skip"
-        }
+        "Show recently added apps": "disable"
       }
     }
   }

@@ -3,6 +3,19 @@
   "Name": "The default profile for all my personal devices",
   "Inherits": "default",
   "Rules": {
+    "System Configuration" : {
+      "General": {
+        "WSL": {
+          "action": "enable",
+          "distributions": [
+            {
+              "name": "Debian"
+            }
+          ]
+        }
+      }
+    },
+
     "Applications": {
       "7zip": true,
       "audacity": true,

@@ -184,7 +184,11 @@ function wdSystemConfigurePrivacy {
                 wdCoreRegSet -Hive "HKCU" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "BingSearchEnabled" -Type DWord -Value 0
                 wdCoreRegSet -Hive "HKCU" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "CortanaConsent" -Type DWord -Value 0
                 wdCoreRegSet -Hive "HKLM" -Path "SOFTWARE\Policies\Microsoft\Edge" -Name "WebWidgetAllowed" -Type DWord -Value 0
-                tskill searchui
+
+                $p = Get-Process -Name "calc" -ErrorAction SilentlyContinue
+                if ($null -ne $p) {
+                    Stop-Process -InputObject $p
+                }
             }
         }
 
@@ -690,8 +694,10 @@ function removeOnedrive {
     process {
         # Stop OneDrive
         wdCoreLog "Stopping OneDrive"
-        taskkill.exe /F /IM "OneDrive.exe"
-        #taskkill.exe /F /IM "explorer.exe"
+        $p = Get-Process -Name "OneDrive.exe" -ErrorAction SilentlyContinue
+        if ($null -ne $p) {
+            Stop-Process -InputObject $p
+        }
 
         # Uninstall OneDrive
         wdCoreLog "Uninstalling OneDrive"
@@ -729,7 +735,7 @@ function removeOnedrive {
         # Remove run option for new users
         wdCoreLog "Removing run option for new users"
         reg load "hku\Default" "$Env:SystemDrive\Users\Default\NTUSER.DAT"
-        reg delete "HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "OneDriveSetup" /f
+        wdCoreRegDelete -Hive "HKCU" -Path "Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "OneDriveSetup"
         reg unload "hku\Default"
 
         # Remove startmenu junk entry
@@ -882,9 +888,9 @@ function wdSystemPostprocess {
     )
 
     process {
-        $options = $profile."Rules"."System Configuration"."Junk"
+        $options = $profile."Rules"."System Configuration"."Post-Process"
         if ($options -eq $null) {
-            wdCoreLog "Profile does not have rules for: System Configuration / Junk"
+            wdCoreLog "Profile does not have rules for: System Configuration / Post-Process"
             return
         }
 
