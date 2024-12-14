@@ -29,14 +29,14 @@ if (-not (Test-Path $tmpBase)) {
 }
 
 if (Test-Path $tmpArchiveFilename) {
-    Remove-Item -Recurse -Force $tmpArchiveFilename | Out-Null
+    Remove-Item -Force $tmpArchiveFilename | Out-Null
 }
 
 Write-Host "Downloading temporary archive of the source ..."
 Invoke-WebRequest "${repositoryUrl}/archive/${branch}.zip" -OutFile $tmpArchiveFilename
 
 if (Test-Path $tmpArchiveBasePart) {
-    Remove-Item -Force $tmpArchiveBasePart | Out-Null
+    Remove-Item -Recurse -Force $tmpArchiveBasePart | Out-Null
 }
 
 Expand-Archive $tmpArchiveFilename -DestinationPath $tmpArchiveBasePart
