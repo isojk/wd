@@ -81,7 +81,7 @@ function wdChocoInstallPackage {
         }
 
         if ($Params -ne $null -and $Params.Trim().Length -gt 0) {
-            choco install -y "${Id}" --params "'$(Params.Trim())'"
+            choco install -y "${Id}" --params "'$($Params.Trim())'"
         }
         else {
             choco install -y "${Id}"
