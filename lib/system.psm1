@@ -881,6 +881,20 @@ function wdSystemConfigureGeneral {
 
 Export-ModuleMember -Function wdSystemConfigureGeneral
 
+function wdSystemExportEnvVarsData {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)] [object] $Profile,
+        [Parameter(Mandatory = $true)] [string] $Target
+    )
+
+    process {
+        # @TODO
+    }
+}
+
+Export-ModuleMember -Function wdSystemExportEnvVarsData
+
 function wdSystemPostprocess {
     [CmdletBinding()]
     param (
