@@ -47,7 +47,7 @@ function hook {
 
                 # Restart autohotkey
                 # Get-Process takes image file name without extension
-                $p = Get-Process -Name "AutoHotkey64"
+                $p = Get-Process -Name "AutoHotkey64" -ErrorAction SilentlyContinue
                 if ($null -ne $p) {
                     #Stop-Process -InputObject $p
                 }
