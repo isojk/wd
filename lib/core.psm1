@@ -3,6 +3,19 @@ $ErrorActionPreference = "Stop"
 $BASEDIR = ".wd"
 $BASEDIR_PRIVATE = ".wdp"
 
+function wdCoreEnsureEnvironmentVars {
+    $base = (wdCoreGetBasedir)
+    $data = (wdCoreGetDataDir)
+
+    # Set environment variable with path to app configuration files
+    [Environment]::SetEnvironmentVariable("DOTFILES", "$data", "User")
+
+    # Add wd to path
+    wdCoreIncludeInEnvPath -Target "User" -Path $base
+}
+
+Export-ModuleMember -Function wdCoreEnsureEnvironmentVars
+
 function wdChocoGetInstallDir {
     [CmdletBinding()]
     param()
@@ -446,7 +459,7 @@ function wdCoreEnumEnvPath {
     )
 
     process {
-        $results = wdCoreEnumEnvVars -Target $Target | Where-Object {$_.Name -eq "Path"} | Select-Object -ExpandProperty Value | ForEach-Object {$_.Split(";")} | Where-Object {$_.Length -gt 0}
+        $results = [Environment]::GetEnvironmentVariable("Path", $Target) | ForEach-Object {$_.Split(";")} | Where-Object {$_.Trim().Length -gt 0}
         if ($Sort) {
             $results = $results | Sort-Object
         }
@@ -456,6 +469,31 @@ function wdCoreEnumEnvPath {
 }
 
 Export-ModuleMember -Function wdCoreEnumEnvPath
+
+function wdCoreIncludeInEnvPath {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)] [string] $Target,
+        [Parameter(Mandatory = $true)] [string] $Path
+    )
+
+    process {
+        $needle = ((wdCoreEnumEnvPath -Target $Target) | ForEach-Object { $_.Trim().ToLower() } | Where-Object { $_ -like $Path })
+        if ($null -ne $needle) {
+            return
+        }
+
+        $newpath = ([Environment]::GetEnvironmentVariable("Path", $Target).Trim())
+        if ($newpath[$newpath.Length - 1] -ne ';') {
+            $newpath += ';'
+        }
+
+        $newpath += $Path
+        [Environment]::SetEnvironmentVariable("Path", $newpath, $Target)
+    }
+}
+
+Export-ModuleMember -Function wdCoreIncludeInEnvPath
 
 function wdCoreFSMergeAttributes () {
     [CmdletBinding()]

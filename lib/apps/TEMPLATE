@@ -25,7 +25,8 @@ function hook {
         $ConfigurationHandlers[$APP_ID] = {
             [CmdletBinding()]
             param (
-                [Parameter(Position = 0, Mandatory = $true)] [object] $profile
+                [Parameter(Position = 0, Mandatory = $true)] [object] $Profile,
+                [Parameter(Mandatory = $false)] [int] $Level = 1
             )
 
             process {

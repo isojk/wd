@@ -1,6 +1,6 @@
 {
   "ID": "home",
-  "Name": "The default profile for all my personal devices",
+  "Name": "The default profile for work environment",
   "Inherits": "default",
   "Rules": {
     "System Configuration" : {
@@ -23,20 +23,15 @@
 
     "Applications": {
       "7zip": true,
-      "audacity": true,
       "autohotkey": true,
       "autoruns": true,
       "everything": true,
-      "ffmpeg": true,
-      "obsidian": true,
-      "potplayer": true,
       "procexp": true,
       "procmon": true,
       "total_commander": true,
       "ungoogled_chromium": true,
       "vscode": true,
-      "windows_terminal": true,
-      "xnviewmp": true
+      "windows_terminal": true
     }
   }
 }

@@ -71,12 +71,16 @@ function wdChocoInstallPackage {
 
     process {
         if ((wdChocoIsInstalled) -eq $false) {
-            wdCoreLogWarning "Chocolatey must be installed first in order to install ${Id}"
+            Write-Host -NoNewLine "Chocolatey must be installed first in order to install """
+            Write-Host -NoNewLine -ForegroundColor Cyan "${Id}"
+            Write-Host """"
             return
         }
 
         if (wdChocoIsPackageInstalled "${Id}") {
-            wdCoreLog "${Id} is already installed on this machine"
+            Write-Host -NoNewLine """"
+            Write-Host -NoNewLine -ForegroundColor Cyan "${Id}"
+            Write-Host """ is already installed on this machine"
             return
         }
 
@@ -90,6 +94,8 @@ function wdChocoInstallPackage {
         wdRefreshEnv
     }
 }
+
+Export-ModuleMember -Function wdChocoInstallPackage
 
 function wdChocoUninstall {
     [CmdletBinding()]
