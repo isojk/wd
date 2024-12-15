@@ -190,6 +190,26 @@ function wdEvalProfileAppsConfig {
             }
         }
 
+        #
+        # Implicit applications
+        # Only git at this time
+        #
+
+        foreach ($appId in @("git")) {
+            $modulePath = "${PSScriptRoot}\apps\${appId}.psm1"
+            #wdCoreLog "Loading app module ${modulePath}"
+
+            $moduleHandle = Get-Module -Name $modulePath -ListAvailable
+            $module = Import-Module $moduleHandle -Force -DisableNameChecking -AsCustomObject -PassThru
+
+            $hook = Get-Command -Module $module | Where-Object {$_.Name -eq "hook"} | Select -First 1
+
+            if ($hook -ne $null) {
+                & $hook -ConfigurationHandlers $ConfigurationHandlers
+            }
+        }
+
+
         wdCoreLog "App modules loaded"
         return $true
     }
