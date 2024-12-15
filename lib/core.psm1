@@ -546,7 +546,7 @@ function wdCoreFSLink () {
         }
 
         if (Test-Path $Source) {
-            Remove-Item -Path $Source -Force | Out-Null
+            Remove-Item -Path $Source -Force -Recurse | Out-Null
         }
 
         New-Item -ItemType SymbolicLink -Path $Source -Target $Target | Out-Null
