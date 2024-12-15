@@ -42,6 +42,14 @@ function hook {
                 $vscode_target_userdata_snippets = "$data\vscode\snippets"
 
                 if ($Level -gt 0) {
+                    if (-not (Test-Path $vscode_source_userdata)) {
+                        New-Item -ItemType Directory -Force -Path $vscode_source_userdata | Out-Null
+                    }
+
+                    if (-not (Test-Path $vscode_source_userdata_snippets)) {
+                        New-Item -ItemType Directory -Force -Path $vscode_source_userdata_snippets | Out-Null
+                    }
+
                     # link snippets
                     wdCoreFSLink -Source $vscode_source_userdata_snippets -Target $vscode_target_userdata_snippets
                     

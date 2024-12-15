@@ -540,6 +540,11 @@ function wdCoreFSLink () {
     )
 
     process {
+        if (-not (Test-Path $Target)) {
+            wdCoreLogWarning "Path ""${Target}"" does not exist"
+            return
+        }
+
         if (Test-Path $Source) {
             Remove-Item -Path $Source -Force | Out-Null
         }
