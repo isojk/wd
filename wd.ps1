@@ -206,13 +206,13 @@ if ($FullAppSetup -or $InstallOnly -or $ConfigureOnly) {
     }
 
     if ($doInstall) {
-        if ((wdConAskYesNo -Prompt "Do you want to (re-)install "${appId}"?" -DefaultValue "yes") -eq "yes") {
+        if ((wdConAskYesNo -Prompt "Do you want to (re-)install ""${appId}""?" -DefaultValue "yes") -eq "yes") {
             wdInstallApplication -AppId $appId -Profile $profileData -InstallationHandlers $appInstallationHandlers -ConfigurationHandlers $appPersonalizationHandlers
         }
     }
 
     if ($doConfigure) {
-        if ((wdConAskYesNo -Prompt "Do you want to configure "${appId}"? (Configuration level ${CfgLevel})" -DefaultValue "yes") -eq "yes") {
+        if ((wdConAskYesNo -Prompt "Do you want to configure ""${appId}""? (Configuration level ${CfgLevel})" -DefaultValue "yes") -eq "yes") {
             wdConfigureApplication -AppId $appId -Profile $profileData -Level $CfgLevel -InstallationHandlers $appInstallationHandlers -ConfigurationHandlers $appPersonalizationHandlers
         }
     }
