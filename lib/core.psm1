@@ -12,6 +12,8 @@ function wdCoreEnsureEnvironmentVars {
 
     # Add wd to path
     wdCoreIncludeInEnvPath -Target "User" -Path $base
+
+    wdRefreshEnv
 }
 
 Export-ModuleMember -Function wdCoreEnsureEnvironmentVars

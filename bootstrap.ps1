@@ -72,4 +72,6 @@ if (Test-Path $basedir) {
 
 git clone "$repositoryUrl" "$basedir"
 
+wdCoreEnsureEnvironmentVars
+
 & $basedir\wd.ps1 -FirstRun
