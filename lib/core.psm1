@@ -52,6 +52,18 @@ function wdRefreshEnv {
 
 Export-ModuleMember -Function wdRefreshEnv
 
+function wdCoreGetTempBasedir {
+    [CmdletBinding()]
+    param ()
+    
+    process {
+        $tmp = [System.IO.Path]::GetTempPath()
+        "${tmp}/.wd"
+    }
+}
+
+Export-ModuleMember -Function wdCoreGetTempBasedir
+
 function wdCoreGetBasedir {
     [CmdletBinding()]
     param ()

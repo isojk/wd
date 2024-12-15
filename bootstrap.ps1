@@ -1,9 +1,10 @@
 #using assembly System.Net.Http
 
+$ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
+
 [System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
 param()
-
-$ErrorActionPreference = "Stop"
 
 # Make sure this script is run with administrator privileges
 $currentPrincipal = (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent()))

@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop"
+
 Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking -Scope Local
 Import-Module $PSScriptRoot\..\essentials.psm1 -DisableNameChecking -Scope Local
 
@@ -18,7 +20,9 @@ function hook {
             )
 
             process {
-                # @TODO
+                wdGithubDownloadLatestRelease -Repository "AutoHotkey/AutoHotkey" {
+                    $_.name.EndsWith("_setup.exe")
+                }
             }
         }
 
@@ -40,6 +44,17 @@ function hook {
                 # Link default .ahk file to startup dir
                 $startupdir = wdCoreRegGet -Hive "HKCU" -Path "Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Startup"
                 wdCoreFSLink -Source "${startupdir}\${ahk_default_filename}" -Target "${data}\autohotkey\${ahk_default_filename}"
+
+                # Restart autohotkey
+                # Get-Process takes image file name without extension
+                $p = Get-Process -Name "AutoHotkey64"
+                if ($null -ne $p) {
+                    #Stop-Process -InputObject $p
+                }
+
+                # AutoHotkey appends /restart when running .ahk directly (registry class)
+                # It is not neccessary to stop the process manually
+                & "${startupdir}\${ahk_default_filename}"
             }
         }
     }

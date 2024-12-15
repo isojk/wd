@@ -1,3 +1,6 @@
+$ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
+
 Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking -Scope Local
 Import-Module $PSScriptRoot\..\essentials.psm1 -DisableNameChecking -Scope Local
 
@@ -18,8 +21,7 @@ function hook {
             )
 
             process {
-                # @TODO
-                # https://t1.daumcdn.net/potplayer/PotPlayer/Version/Latest/PotPlayerSetup64.exe
+                wdGenericInstallFromURL -AppId $APP_ID -Url "https://t1.daumcdn.net/potplayer/PotPlayer/Version/Latest/PotPlayerSetup64.exe" -Filename "PotPlayerSetup64.exe"
             }
         }
 
@@ -33,8 +35,7 @@ function hook {
             process {
                 $data = (wdCoreGetDataDir)
                 $private = (wdCoreGetPrivateDataDir)
-
-                # @TODO
+                # Nothing to work on yet
             }
         }
     }

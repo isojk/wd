@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop"
+
 Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking -Scope Local
 Import-Module $PSScriptRoot\..\essentials.psm1 -DisableNameChecking -Scope Local
 
@@ -18,7 +20,9 @@ function hook {
             )
 
             process {
-                # @TODO
+                wdGithubDownloadLatestRelease -Repository "ungoogled-software/ungoogled-chromium-windows" {
+                    $_.name.EndsWith("installer_x64.exe")
+                }
             }
         }
 
