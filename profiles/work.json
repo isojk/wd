@@ -26,6 +26,7 @@
       "autohotkey": true,
       "autoruns": true,
       "everything": true,
+      "keypirinha": true,
       "procexp": true,
       "procmon": true,
       "total_commander": true,

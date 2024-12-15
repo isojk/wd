@@ -28,6 +28,7 @@
       "autoruns": true,
       "everything": true,
       "ffmpeg": true,
+      "keypirinha": true,
       "obsidian": true,
       "potplayer": true,
       "procexp": true,
