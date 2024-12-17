@@ -239,28 +239,30 @@ if ($EnumEnvPath) {
 #
 # Print help
 
-Write-Host "Usage:"
-Write-Host "Run all scripts related to system setup:"
-Write-Host "wd -Profile home -System -All"
-Write-Host
-Write-Host "Run all scripts related to privacy configuration:"
-Write-Host "wd -Profile home -System -ConfigurePrivacy"
-Write-Host
-Write-Host "Run all scripts for full configuration and for personalizing explorer:"
-Write-Host "wd -Profile home -System -ConfigureAll -PersonalizeExplorer"
-Write-Host
-Write-Host "Install and configure all apps defined in the selected profile:"
-Write-Host "(-CfgLevel determines, if supported, the extent of the configuration step. 1 is lowest, 99 is highest.)"
-Write-Host "wd -Profile home -FullAppSetup -AllApps [-CfgLevel]"
-Write-Host
-Write-Host "Configure only specific app:"
-Write-Host "(vscode will (re-)install extensions only with -CfgLevel being set 2 or higher)"
-Write-Host "wd -Profile home -ConfigureOnly -CfgLevel 2 -App vscode"
-Write-Host
-Write-Host "Print all user environment variables:"
-Write-Host "(For -EnvTarget option, ""User"" and ""Machine"" values are supported)"
-Write-Host "wd -EnumEnvVars"
-Write-Host
-Write-Host "Print all directories stored in this machine PATH environment variable"
-Write-Host "wd -EnumEnvPath -EnvTarget Machine"
-Write-Host
+if ($true) {
+    Write-Host "Usage:"
+    Write-Host "Run all scripts related to system setup:"
+    Write-Host "wd -Profile home -System -All"
+    Write-Host
+    Write-Host "Run all scripts related to privacy configuration:"
+    Write-Host "wd -Profile home -System -ConfigurePrivacy"
+    Write-Host
+    Write-Host "Run all scripts for full configuration and for personalizing explorer:"
+    Write-Host "wd -Profile home -System -ConfigureAll -PersonalizeExplorer"
+    Write-Host
+    Write-Host "Install and configure all apps defined in the selected profile:"
+    Write-Host "(-CfgLevel determines, if supported, the extent of the configuration step. 1 is lowest, 99 is highest.)"
+    Write-Host "wd -Profile home -FullAppSetup -AllApps [-CfgLevel]"
+    Write-Host
+    Write-Host "Configure only specific app:"
+    Write-Host "(vscode will (re-)install extensions only with -CfgLevel being set 2 or higher)"
+    Write-Host "wd -Profile home -ConfigureOnly -CfgLevel 2 -App vscode"
+    Write-Host
+    Write-Host "Print all user environment variables:"
+    Write-Host "(For -EnvTarget option, ""User"" and ""Machine"" values are supported)"
+    Write-Host "wd -EnumEnvVars"
+    Write-Host
+    Write-Host "Print all directories stored in this machine PATH environment variable"
+    Write-Host "wd -EnumEnvPath -EnvTarget Machine"
+    Write-Host
+}

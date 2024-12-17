@@ -15,6 +15,9 @@ function wdSystemPersonalizeGeneral {
             return
         }
 
+        $data = (wdCoreGetDataDir)
+        $private = (wdCoreGetPrivateDataDir)
+
         wdCoreEvalRule $options "Developer mode" @{
             "enable" = {
                 wdCoreRegSet -Hive "HKLM" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -Type DWord -Value 1
@@ -117,6 +120,54 @@ function wdSystemPersonalizeGeneral {
 
             "disable" = {
                 wdCoreRegSet -Hive "HKCU" -Path "SOFTWARE\Microsoft\GameBar" -Name "UseNexusForGameBarEnabled" -Type DWord -Value 0
+            }
+        }
+
+        #
+        # Enviroment variables from data
+        #
+
+        $env_map = @{
+            Machine = "env.machine.json"
+            User = "env.user.json"
+        }
+
+        $env_targets = @(
+            "Machine",
+            "User"
+        )
+
+        foreach ($target in $env_targets) {
+            $filename = $env_map[$target]
+
+            $env_user_path = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($data, $filename))
+            $env_user = @()
+            if (Test-Path $env_user_path) {
+                $env_user = (Get-Content $env_user_path | ConvertFrom-Json)
+            }
+
+            $env_user_private_path = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($private, $filename))
+            if (Test-Path $env_user_private_path) {
+                $env_user_private = (Get-Content $env_user_private_path | ConvertFrom-Json)
+                foreach ($privateItem in $env_user_private) {
+                    $temp = $false
+                    foreach ($publicItem in $env_user) {
+                        if ($publicItem.key -eq $privateItem.key) {
+                            $publicItem.value = $privateItem.value
+                            $temp = $true
+                            break
+                        }
+                    }
+
+                    if ($temp -eq $false) {
+                        $env_user += $privateItem
+                    }
+                }
+            }
+
+            foreach ($item in $env_user) {
+                #[Environment]::SetEnvironmentVariable($item.key, $null, $target)
+                [Environment]::SetEnvironmentVariable($item.key, $item.value, $target)
             }
         }
 
