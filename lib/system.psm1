@@ -1,6 +1,7 @@
 Import-Module $PSScriptRoot\core.psm1 -DisableNameChecking -Scope Local
 
 $ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
 
 function wdSystemConfigurePrivacy {
     [CmdletBinding()]
@@ -849,16 +850,24 @@ function wdSystemConfigureGeneral {
             $enabled = $false
             switch ($options."WSL"."action") {
                 "enable" {
-                    Enable-WindowsOptionalFeature -Online -All -FeatureName "VirtualMachinePlatform" -NoRestart
-                    Enable-WindowsOptionalFeature -Online -All -FeatureName "Microsoft-Windows-Subsystem-Linux" -NoRestart
+                    wdCoreLog "Enabling optional feature: VirtualMachinePlatform"
+                    Enable-WindowsOptionalFeature -Online -All -FeatureName "VirtualMachinePlatform" -NoRestart | Out-Null
+
+                    wdCoreLog "Enabling optional feature: Microsoft-Windows-Subsystem-Linux"
+                    Enable-WindowsOptionalFeature -Online -All -FeatureName "Microsoft-Windows-Subsystem-Linux" -NoRestart | Out-Null
+
                     $enabled = $true
                 }
 
                 "disable" {
-                    wsl --shutdown
+                    wdCoreLog "Shutting down WSL"
+                    wsl --shutdown | Out-Null
 
-                    Disable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -NoRestart
-                    Disable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -NoRestart
+                    wdCoreLog "Disabling optional feature: VirtualMachinePlatform"
+                    Disable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -NoRestart | Out-Null
+
+                    wdCoreLog "Disabling optional feature: Microsoft-Windows-Subsystem-Linux"
+                    Disable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -NoRestart | Out-Null
                 }
             }
 
