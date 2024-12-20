@@ -169,6 +169,11 @@ if ($System) {
         $hasAny = $true
         wdSystemPersonalizeExplorer -profile $profileData
     }
+    
+    if ($doPersonalizeGeneral -and (wdConAskYesNo -Prompt "Do you want to link predefined LNKs?" -DefaultValue "yes") -eq "yes") {
+        $hasAny = $true
+        wdSystemPersonalizeLinkBin -profile $profileData
+    }
 
     if ($steps -gt 0) {
         wdSystemPostprocess -profile $profileData

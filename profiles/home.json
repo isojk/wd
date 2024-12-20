@@ -21,7 +21,7 @@
       }
     },
 
-    "Applications": {      
+    "Applications": {
       "7zip": true,
       "audacity": true,
       "autohotkey": true,

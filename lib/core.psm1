@@ -120,6 +120,29 @@ function wdCoreGetPrivateDataDir {
 
 Export-ModuleMember -Function wdCoreGetPrivateDataDir
 
+
+function wdCoreGetBinDir {
+    [CmdletBinding()]
+    param ()
+
+    process {
+        [System.IO.Path]::GetFullPath([System.IO.Path]::Combine("$(wdCoreGetBasedir)", "bin"))
+    }
+}
+
+Export-ModuleMember -Function wdCoreGetBinDir
+
+function wdCoreGetUserBinDir {
+    [CmdletBinding()]
+    param ()
+
+    process {
+        [System.IO.Path]::GetFullPath([System.IO.Path]::Combine("${Env:USERPROFILE}", "Bin"))
+    }
+}
+
+Export-ModuleMember -Function wdCoreGetUserBinDir
+
 function wdCoreMergePSObjects {
     [CmdletBinding()]
     param (

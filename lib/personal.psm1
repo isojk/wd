@@ -530,3 +530,39 @@ function wdSystemPersonalizeExplorerContextMenu {
         }
     }
 }
+
+function wdSystemPersonalizeLinkBin {
+    [CmdletBinding()]
+    param (
+        [Parameter(Position = 0, Mandatory = $true)] [object] $profile
+    )
+
+    process {
+        $repo_bin = (wdCoreGetBinDir)
+        $user_bin = (wdCoreGetUserBinDir)
+
+        if (-not (Test-Path $repo_bin)) {
+            return
+        }
+
+        if (-not (Test-Path $user_bin)) {
+            New-Item -ItemType Directory -Force -Path $user_bin | Out-Null
+        }
+
+        Get-ChildItem $repo_bin | ForEach-Object {
+            $filename = $_.Name
+            $repo_file_path = [System.IO.Path]::Combine($repo_bin, $filename)
+            $user_file_path = [System.IO.Path]::Combine($user_bin, $filename)
+
+            if (Test-Path $user_file_path) {
+                Remove-Item -Force -Path $user_file_path | Out-Null
+            }
+
+            wdCoreFSLink -Source $user_file_path -Target $repo_file_path
+        }
+
+
+    }
+}
+
+Export-ModuleMember -Function wdSystemPersonalizeLinkBin
