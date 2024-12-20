@@ -432,6 +432,18 @@ function wdSystemPersonalizeExplorer {
             }
         }
 
+        wdCoreEvalRule $options "Recycle Bin: Desktop icon" @{
+            "show" = {
+                wdCoreRegSet -Hive "HKCU" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu" -Name "{645FF040-5081-101B-9F08-00AA002F954E}" -Type DWord -Value 0
+                wdCoreRegSet -Hive "HKCU" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" -Name "{645FF040-5081-101B-9F08-00AA002F954E}" -Type DWord -Value 0
+            }
+
+            "hide" = {
+                wdCoreRegSet -Hive "HKCU" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu" -Name "{645FF040-5081-101B-9F08-00AA002F954E}" -Type DWord -Value 1
+                wdCoreRegSet -Hive "HKCU" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" -Name "{645FF040-5081-101B-9F08-00AA002F954E}" -Type DWord -Value 1
+            }
+        }
+
         wdCoreEvalRule $options "Align taskbar left" @{
             # 0 = left, 1 = center
             

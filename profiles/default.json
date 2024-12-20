@@ -162,6 +162,7 @@
         "Taskbar: Colors on Taskbar, Start, and SysTray": "skip",
         "Titlebar: Theme colors on titlebar": "skip",
         "Recycle Bin: Delete Confirmation Dialog": "enable",
+        "Recycle Bin: Desktop icon": "hide",
         "Align taskbar left": "enable",
         "Show recently added apps": "disable"
       }
