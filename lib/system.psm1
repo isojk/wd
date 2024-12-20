@@ -207,6 +207,12 @@ function wdSystemConfigurePrivacy {
             }
         }
 
+        wdCoreEvalRule $options "Windows Recall" @{
+            "disable" = {
+                wdCoreRegSet -Hive "HKCU" -Path "SOFTWARE\Policies\Microsoft\Windows\WindowsAI" -Name "DisableAIDataAnalysis" -Type DWord -Value 1
+            }
+        }
+
         wdCoreEvalRule $options "App having access to account info" @{
             "deny" = {
                 wdCoreRegSet -Hive "HKCU" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation" -Name "Value" -Type String -Value "Deny"
