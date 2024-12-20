@@ -113,7 +113,8 @@ function wdChocoInstallPackage {
     [CmdletBinding()]
     param(
         [Parameter(Position = 0, Mandatory = $true)] [string] $Id,
-        [Parameter(Mandatory = $false)] [string] $Params = $null
+        [Parameter(Mandatory = $false)] [string] $Params = $null,
+        [Parameter(Mandatory = $false)] [switch] $Force = $false
     )
 
     process {
@@ -131,11 +132,22 @@ function wdChocoInstallPackage {
             return
         }
 
+        # @TODO clean this up
         if ($Params -ne $null -and $Params.Trim().Length -gt 0) {
-            choco install -y "${Id}" --params "'$($Params.Trim())'"
+            if ($Force) {
+                choco install -y "${Id}" --params "'$($Params.Trim())'" --force
+            }
+            else {
+                choco install -y "${Id}" --params "'$($Params.Trim())'"
+            }
         }
         else {
-            choco install -y "${Id}"
+            if ($Force) {
+                choco install -y "${Id}" --force
+            }
+            else {
+                choco install -y "${Id}"
+            }
         }
 
         wdRefreshEnv

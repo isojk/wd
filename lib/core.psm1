@@ -1,4 +1,5 @@
 $ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
 
 $BASEDIR = ".wd"
 $BASEDIR_PRIVATE = ".wdp"

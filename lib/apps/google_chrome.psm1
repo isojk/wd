@@ -1,9 +1,10 @@
 $ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
 
 Import-Module $PSScriptRoot\..\core.psm1 -DisableNameChecking -Scope Local
 Import-Module $PSScriptRoot\..\essentials.psm1 -DisableNameChecking -Scope Local
 
-$APP_ID = "ungoogled_chromium"
+$APP_ID = "google_chrome"
 
 function hook {
     [CmdletBinding()]
@@ -20,9 +21,7 @@ function hook {
             )
 
             process {
-                wdGithubDownloadLatestRelease -Repository "ungoogled-software/ungoogled-chromium-windows" {
-                    $_.name.EndsWith("installer_x64.exe")
-                }
+                wdChocoInstallPackage -Id "googlechrome"
             }
         }
 
@@ -36,12 +35,13 @@ function hook {
             process {
                 $data = (wdCoreGetDataDir)
                 $private = (wdCoreGetPrivateDataDir)
-                $ungchr_userdata = "${Env:LOCALAPPDATA}\Chromium\User Data\Default\"
+
+                $chrome_userdata = "${Env:LOCALAPPDATA}\Google\Chrome\User Data\Default\"
 
                 # link private bookmarks
                 # @TODO
-                if (Test-Path "${private}\ungoogled_chromium") {
-                    wdCoreFSLink -Source "${ungchr_userdata}\Bookmarks" -Target "${private}\ungoogled_chromium\Bookmarks.json"
+                if (Test-Path "${private}\google_chrome") {
+                    wdCoreFSLink -Source "${chrome_userdata}\Bookmarks" -Target "${private}\google_chrome\Bookmarks.json"
                 }
             }
         }

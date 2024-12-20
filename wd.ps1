@@ -23,10 +23,13 @@ param(
 
     [Parameter(Mandatory = $false)] [switch]    $EnumEnvVars = $false,
     [Parameter(Mandatory = $false)] [switch]    $EnumEnvPath = $false,
-    [Parameter(Mandatory = $false)] [string]    $EnvTarget = "User"
+    [Parameter(Mandatory = $false)] [string]    $EnvTarget = "User",
+
+    [Parameter(Mandatory = $false)] [string]    $Where = $null
 )
 
 $ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
 
 # Make sure this script is run with administrator privileges
 $currentPrincipal = (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent()))
@@ -232,6 +235,11 @@ if ($EnumEnvVars) {
 
 if ($EnumEnvPath) {
     wdCoreEnumEnvPath -Target $EnvTarget -Sort
+    exit 0
+}
+
+if ($Where.Trim().Length -gt 0) {
+    wdCoreWhere $Where
     exit 0
 }
 

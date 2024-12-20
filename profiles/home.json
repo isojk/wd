@@ -21,18 +21,20 @@
       }
     },
 
-    "Applications": {
+    "Applications": {      
       "7zip": true,
       "audacity": true,
       "autohotkey": true,
       "autoruns": true,
       "everything": true,
       "ffmpeg": true,
+      "google_chrome": true,
       "keypirinha": true,
       "obsidian": true,
       "potplayer": true,
       "procexp": true,
       "procmon": true,
+      "sumatrapdf": true,
       "total_commander": true,
       "ungoogled_chromium": true,
       "vscode": true,
