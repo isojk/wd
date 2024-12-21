@@ -112,6 +112,7 @@
         "Edge running in background": "disable",
         "Superfetch": "disable",
         "WiFi Sense": "disable",
+        "Sudo": "enable",
         "WSL": {
           "action": "disable"
         }

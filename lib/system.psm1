@@ -848,6 +848,16 @@ function wdSystemConfigureGeneral {
             }
         }
 
+        wdCoreEvalRule $options "Sudo" @{
+            "enable" = {
+                wdCoreRegSet -Hive "HKLM" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Sudo" -Name "Enabled" -Type DWord -Value 1
+            }
+
+            "disable" = {
+                wdCoreRegSet -Hive "HKLM" -Path "SOFTWARE\Microsoft\Windows\CurrentVersion\Sudo" -Name "Enabled" -Type DWord -Value 0
+            }
+        }
+
         #
         # WSL
         #
