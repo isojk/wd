@@ -552,6 +552,7 @@ function wdSystemPersonalizeLinkBin {
     process {
         $repo_bin = (wdCoreGetBinDir)
         $user_bin = (wdCoreGetUserBinDir)
+        $system_bin = (wdCoreGetSystemBinDir)
 
         if (-not (Test-Path $repo_bin)) {
             return
@@ -560,6 +561,14 @@ function wdSystemPersonalizeLinkBin {
         if (-not (Test-Path $user_bin)) {
             New-Item -ItemType Directory -Force -Path $user_bin | Out-Null
         }
+
+        wdCoreIncludeInEnvPath -Target User -Path $user_bin
+
+        if (-not (Test-Path $system_bin)) {
+            New-Item -ItemType Directory -Force -Path $system_bin | Out-Null
+        }
+
+        wdCoreIncludeInEnvPath -Target Machine -Path $system_bin
 
         Get-ChildItem $repo_bin | ForEach-Object {
             $filename = $_.Name
@@ -572,8 +581,6 @@ function wdSystemPersonalizeLinkBin {
 
             wdCoreFSLink -Source $user_file_path -Target $repo_file_path
         }
-
-
     }
 }
 

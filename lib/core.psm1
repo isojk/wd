@@ -143,6 +143,18 @@ function wdCoreGetUserBinDir {
 
 Export-ModuleMember -Function wdCoreGetUserBinDir
 
+function wdCoreGetSystemBinDir {
+    [CmdletBinding()]
+    param ()
+
+    process {
+        $driveroot = ([System.IO.Path]::GetPathRoot([Environment]::SystemDirectory))
+        [System.IO.Path]::GetFullPath([System.IO.Path]::Combine("${driveroot}", "Bin"))
+    }
+}
+
+Export-ModuleMember -Function wdCoreGetSystemBinDir
+
 function wdCoreMergePSObjects {
     [CmdletBinding()]
     param (
