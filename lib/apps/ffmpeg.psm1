@@ -20,7 +20,7 @@ function hook {
             )
 
             process {
-                wdChocoInstallPackage -Id "ffmpeg-full"
+                wdChocoInstallPackage -Id "ffmpeg-shared"
             }
         }
 
