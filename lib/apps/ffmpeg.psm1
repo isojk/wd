@@ -20,7 +20,7 @@ function hook {
             )
 
             process {
-                winget install --id Gyan.FFmpeg.Shared
+                wdChocoInstallPackage -Id "ffmpeg-full"
             }
         }
 
