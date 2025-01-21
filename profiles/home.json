@@ -29,6 +29,7 @@
       "everything": true,
       "ffmpeg": true,
       "google_chrome": true,
+      "hxd": true,
       "keypirinha": true,
       "obsidian": true,
       "potplayer": true,
