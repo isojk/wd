@@ -29,6 +29,7 @@
       "keypirinha": true,
       "procexp": true,
       "procmon": true,
+      "sumatrapdf": true,
       "total_commander": true,
       "ungoogled_chromium": true,
       "vscode": true,
