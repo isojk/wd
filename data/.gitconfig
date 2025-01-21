@@ -6,7 +6,9 @@
   path = "~/.local.gitconfig"
 
 [core]
+  askpass =
   autocrlf = false
+	editor = code --wait
 
 [push]
   default = simple
@@ -14,3 +16,5 @@
   
 [branch]
   autoSetupMerge = true
+[credential]
+	modalprompt = false
