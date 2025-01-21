@@ -4,5 +4,10 @@
     "key": "ctrl+n",
     "command": "workbench.files.action.createFileFromExplorer",
     "when": "explorerViewletFocus && explorerViewletVisible && !inputFocus"
+  },
+  {
+    "key": "ctrl+shift+f9",
+    "command": "workbench.debug.viewlet.action.removeAllBreakpoints",
+    "when": "editorFocus"
   }
 ]

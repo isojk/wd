@@ -4,6 +4,7 @@
   //"editor.fontFamily": "Consolas, 'Courier New', monospace",
   "editor.fontSize": 11,
   "editor.stickyScroll.enabled": false,
+  "editor.unicodeHighlight.nonBasicASCII": false,
   
   "explorer.autoReveal": false,
   "explorer.compactFolders": false,
@@ -23,6 +24,10 @@
 
   "chaliceIcons.showArrows": false,
 
+  "dotnet.codeLens.enableReferencesCodeLens": false,
+
+  "git.openRepositoryInParentFolders": "never",
+  
   "powershell.enableReferencesCodeLens": false,
   "powershell.integratedConsole.suppressStartupBanner": true,
 }
