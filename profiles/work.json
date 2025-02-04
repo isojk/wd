@@ -28,6 +28,7 @@
       "everything": true,
       "hxd": true,
       "keypirinha": true,
+      "paintdotnet": true,
       "procexp": true,
       "procmon": true,
       "sumatrapdf": true,
