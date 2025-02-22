@@ -16,12 +16,9 @@ Use at your own risk
 
 ## Bootstraping on a new machine
 
-@TODO
-<!--
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString("https://github.com/isojk/wd/blob/trunk/bootstrap.ps1?raw=true"))
 ```
--->
 
 ## Usage
 

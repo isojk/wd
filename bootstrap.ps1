@@ -1,13 +1,15 @@
+#requires -Version 3
 #using assembly System.Net.Http
-
-<#
-$ErrorActionPreference = "Stop"
-$ProgressPreference = "SilentlyContinue"
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("PSUseApprovedVerbs", "")]
 param()
 
-# Make sure this script is run with administrator privileges
+$ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
+
+# Make sure a correct trace information is displayed upon an unhandled exception
+trap { throw $Error[0] }
+
 $currentPrincipal = (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent()))
 if (-not ($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) {
     Write-Error "You must execute this script with administrator privileges"
@@ -25,7 +27,6 @@ $tmpArchiveBasePart = "${tmpBase}/${branch}"
 $tmpArchiveBase = "${tmpArchiveBasePart}/wd-${branch}"
 
 # Download trunk archive from GitHub to user temporary directory
-
 if (-not (Test-Path $tmpBase)) {
     New-Item -ItemType Directory -Force -Path $tmpBase | Out-Null
 }
@@ -44,28 +45,27 @@ if (Test-Path $tmpArchiveBasePart) {
 Expand-Archive $tmpArchiveFilename -DestinationPath $tmpArchiveBasePart
 
 # Load essential modules
-
-Import-Module $tmpArchiveBase/lib/core.psm1 -Force -DisableNameChecking -Scope Local
-Import-Module $tmpArchiveBase/lib/essentials.psm1 -Force -DisableNameChecking -Scope Local
+Import-Module "${tmpArchiveBase}\Library\ImportModuleAsObject.psm1" -Force
+$core = ImportModuleAsObject "${tmpArchiveBase}\Library\Core.psm1"
+$mgmt = ImportModuleAsObject "${tmpArchiveBase}\Library\AppManagement.psm1"
+$envutil = ImportModuleAsObject "${tmpArchiveBase}\Library\Env.psm1"
+$git = ImportModuleAsObject "${tmpArchiveBase}\Apps\Git.psm1"
 
 # Install chocolatey
-
-if (-not (wdChocoIsInstalled)) {
+if (-not (& $mgmt.ChocoIsChocoInstalled)) {
     Write-Host "Installing chocolatey ..."
-    wdChocoInstall
+    & $mgmt.ChocoInstallChoco
 }
 
 # Install git
-
-if (-not (wdGitIsInstalled)) {
+if (-not (& $git.IsInstalled)) {
     Write-Host "Installing git ..."
-    wdGitInstall
+    & $git.Install
 }
 
 # Clone the source into proper destination
-
-$basedir = wdCoreGetBasedir
-
+$basedir = (& $core.GetBasePath)
+#$basedir = "C:\Users\isojk\.wd_test"
 if (Test-Path $basedir) {
     Write-Host "Deleting directory: ${basedir}"
     Remove-Item -Recurse -Force $basedir | Out-Null
@@ -73,7 +73,8 @@ if (Test-Path $basedir) {
 
 git clone "$repositoryUrl" "$basedir"
 
-wdCoreEnsureEnvironmentVars
+# Refresh environment variables
+& $envutil.RefreshEnvVars
 
+# Jump to the entry script
 & $basedir\wd.ps1 -FirstRun
-#>

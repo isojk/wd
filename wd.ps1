@@ -6,6 +6,7 @@ param(
     [Parameter(Mandatory = $false, Position = 0)] [string] $Subcommand = $null,
     [Parameter(Mandatory = $false)] $Profile = $null,
     [Parameter(Mandatory = $false)] [switch] $Help = $false,
+    [Parameter(Mandatory = $false)] [switch] $FirstRun = $false,
     [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true)] [PSObject[]] $RemainingArgsLine
 )
 
@@ -50,6 +51,15 @@ function escapeNull {
         }
 
         return $value
+    }
+}
+
+function ResetEnvVars {
+    process {
+        $appPath = (& $core.GetAppsPath)
+        [Environment]::SetEnvironmentVariable("DOTFILES", $appPath, "User") | Out-Null
+
+        & $envutil.RefreshEnvVars
     }
 }
 
@@ -210,8 +220,7 @@ $Commands = @{
         }
 
         "Action" = {
-            $appPath = (& $core.GetAppsPath)
-            [Environment]::SetEnvironmentVariable("DOTFILES", $appPath, "User") | Out-Null
+            & ResetEnvVars
         }
     }
 
@@ -224,6 +233,11 @@ $Commands = @{
             & choco install -y "paint.net"
         }
     }
+}
+
+if ($FirstRun) {
+    & ResetEnvVars
+    $Help = $true
 }
 
 if (-not ($Subcommand)) {
