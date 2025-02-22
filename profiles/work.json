@@ -1,41 +1,71 @@
 {
-  "ID": "home",
-  "Name": "The default profile for work environment",
-  "Inherits": "default",
+  "ID": "Work",
+  "Name": "The default ruleset for generic work environment",
+  "Inherits": "Default",
   "Rules": {
-    "System Configuration" : {
-      "Privacy": {
+    "System" : {
+      "Privacy options": {
         "Defender: Cloud-Based Protection": "disable",
         "Defender: Automatic sample submission": "disable"
-      },
-
-      "General": {
-        "WSL": {
-          "action": "enable",
-          "distributions": [
-            {
-              "name": "Debian"
-            }
-          ]
-        }
       }
     },
 
     "Applications": {
-      "7zip": true,
-      "autohotkey": true,
-      "autoruns": true,
-      "everything": true,
-      "hxd": true,
-      "keypirinha": true,
-      "paintdotnet": true,
-      "procexp": true,
-      "procmon": true,
-      "sumatrapdf": true,
-      "total_commander": true,
-      "ungoogled_chromium": true,
-      "vscode": true,
-      "windows_terminal": true
+      "7Zip": {
+        "Default action": "fullSetup"
+      },
+
+      "AutoHotkey": {
+        "Default action": "fullSetup"
+      },
+
+      "Autoruns": {
+        "Default action": "fullSetup"
+      },
+
+      "Everything": {
+        "Default action": "fullSetup"
+      },
+
+      "HxD": {
+        "Default action": "fullSetup"
+      },
+
+      "Keypirinha": {
+        "Default action": "fullSetup"
+      },
+
+      "PaintDotNet": {
+        "Default action": "fullSetup"
+      },
+
+      "Procexp": {
+        "Default action": "fullSetup"
+      },
+
+      "Procmon": {
+        "Default action": "fullSetup"
+      },
+
+      "SumatraPDF": {
+        "Default action": "fullSetup"
+      },
+
+      "TotalCommander": {
+        "Default action": "fullSetup"
+      },
+
+      "UngoogledChromium": {
+        "Default action": "fullSetup"
+      },
+
+      "VSCode": {
+        "Default action": "fullSetup"
+      },
+
+      "WindowsTerminal": {
+        "Default action": "fullSetup"
+      }
     }
   }
 }

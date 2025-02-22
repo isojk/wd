@@ -1,5 +1,6 @@
 #using assembly System.Net.Http
 
+<#
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
@@ -75,3 +76,4 @@ git clone "$repositoryUrl" "$basedir"
 wdCoreEnsureEnvironmentVars
 
 & $basedir\wd.ps1 -FirstRun
+#>

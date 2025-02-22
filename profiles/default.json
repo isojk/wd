@@ -1,15 +1,15 @@
 {
-  "ID": "default",
-  "Name": "Default Rules",
+  "ID": "Default",
+  "Name": "Default Ruleset",
   "Rules": {
-    "System Configuration": {
-      "Privacy": {
+    "System": {
+      "Privacy options": {
         ".NET telemetry": "disable",
         "Apps having ability to use advertising ID for experiences across apps": "disable",
         "Tailored experiences with diagnostic data for current user": "disable",
         "Application launch tracking": "disable",
         "Activity History": "disable",
-        "SmartScreen Filter for Store Apps": "disable",
+        "SmartScreen filter for store apps": "disable",
         "Key logging & transmission to Microsoft": "disable",
         "Websites having ability to access language list": "disable",
         "SmartGlass": "disable",
@@ -26,38 +26,42 @@
         "Showing suggestions for using mobile device with Windows (Phone Link suggestions)": "disable",
         "Speech, Inking, & Typing getting to know user": "disable",
         "Feedback: Windows asking for user feedback": "disable",
-        "Feedback: Sending Diagnostic and usage data": "disable",
-        "Block Outlook Preview from Outlook 365 in Windows Registry": "disable",
+        "Feedback: Sending diagnostic and usage data": "disable",
+        "Block Outlook Preview from Outlook 365 in Windows registry": "disable",
         "Bing Search widget": "disable",
         "Defender: Cloud-Based Protection": "enable",
         "Defender: Automatic sample submission": "enable",
         "Windows Recall": "disable",
-        "App having access to account info": "deny",
-        "App having access to calendar": "deny",
-        "App having access to call history": "deny",
-        "App having access to camera": "deny",
-        "App having access to contacts": "deny",
-        "App having access to app diagnostics": "deny",
-        "App having access to documents": "deny",
-        "App having access to downloads": "deny",
-        "App having access to emails": "deny",
-        "App having access to filesystem": "deny",
-        "App having access to location": "deny",
-        "App having access to messaging": "deny",
-        "App having access to microphone": "deny",
-        "App having access to music library": "deny",
-        "App having access to notifications": "deny",
-        "App having access to phone calls": "deny",
-        "App having access to pictures": "deny",
-        "App having access to radios": "deny",
-        "App having access to screenshots": "deny",
-        "App having access to tasks": "deny",
-        "App having ability to share and sync with non-explicitly-paired wireless devices over uPnP": "deny",
-        "App having access to videos": "deny"
+        "WiFi Sense": "disable",
+
+        "Capability Access Manager": {
+          "App having access to account info": "deny",
+          "App having access to calendar": "deny",
+          "App having access to call history": "deny",
+          "App having access to camera": "deny",
+          "App having access to contacts": "deny",
+          "App having access to app diagnostics": "deny",
+          "App having access to documents": "deny",
+          "App having access to downloads": "deny",
+          "App having access to emails": "deny",
+          "App having access to filesystem": "deny",
+          "App having access to location": "deny",
+          "App having access to messaging": "deny",
+          "App having access to microphone": "deny",
+          "App having access to music library": "deny",
+          "App having access to notifications": "deny",
+          "App having access to phone calls": "deny",
+          "App having access to pictures": "deny",
+          "App having access to radios": "deny",
+          "App having access to screenshots": "deny",
+          "App having access to tasks": "deny",
+          "App having ability to share and sync with non-explicitly-paired wireless devices over uPnP": "deny",
+          "App having access to videos": "deny"
+        }
       },
 
-      "Default Applications": {
-        "Microsoft OneDrive": "remove_completely",
+      "Default apps": {
+        "Microsoft OneDrive": "remove",
 
         "Microsoft 3D Builder": "remove",
         "Microsoft Alarms and Clock": "remove",
@@ -107,52 +111,55 @@
         "Zune Music": "remove",
         "Zune Video": "remove"
       },
-    
-      "General": {
-        "Edge running in background": "disable",
-        "Superfetch": "disable",
-        "WiFi Sense": "disable",
-        "Sudo": "enable",
-        "WSL": {
-          "action": "disable"
+
+      "Autoruns": {
+        "Edge": "disable"
+      },
+
+      "Environment variables": {
+        "Machine": {},
+        "User": {
+          "LESSHISTFILE": "-"
         }
       },
 
-      "Post-Process": {
-        "Contacts (user profile)": "remove",
-        "Favorites (user profile)": "remove",
-        "Links (user profile)": "remove",
-        "SavedGames (user profile)": "remove",
-        "Searches (user profile)": "remove",
-        ".lesshst": "remove"
-      }
-    },
+      "Localization": {
+        "Time": {
+          "Resolution": "automatic"
+        },
 
-    "System Personalization": {
-      "General": {
-        "Developer mode": "enable",
-        "Startup sound": "disable",
-        "Hibernation": "disable",
-        "Long Paths": "enable",
-        "Sticky Keys": "disable",
-        "Windows Hello notifications": "disable",
-        "Windows Narrator Hotkey": "disable",
-        "Auto-correct": "disable",
-        "Browser tabs during alt-tab": "disable",
-        "Game bar (ms-gamingoverlay)": "disable",
+        "Time zone": {
+          "Resolution": "manual",
+          "Value": "Central Europe Standard Time"
+        },
 
-        "Time": "set_automatic",
-        "Time Zone": "set_manual",
-        "Time Zone Value": "Central Europe Standard Time",
-        "First Day of Week Value": "0",
-        "Short Date Format Value": ["yyyy-MM-dd", "2", "-"],
-        "Long Date Format Value": "dddd, d MMMM, yyyy",
-        "Short Time Format Value": "HH:mm",
-        "Long Time Format Value": ["HH:mm:ss", "1", "1", "0", ":"]
+        "First day of week": "monday",
+
+        "Short date format": {
+          "Format": "yyyy-MM-dd",
+          "Ordering specifier": "2",
+          "Separator": "-"
+        },
+
+        "Long date format": {
+          "Format": "dddd, d MMMM, yyyy"
+        },
+
+        "Short time format": {
+          "Format": "HH:mm"
+        },
+
+        "Long time format": {
+          "Format": "HH:mm:ss",
+          "iTime": "1",
+          "iTLZero": "1",
+          "iTimePrefix": "0",
+          "Separator": ":"
+        }
       },
-      
+
       "Explorer": {
-        "Compact View Mode": "disable",
+        "Compact view mode": "disable",
         "Hidden files": "hide",
         "File extensions": "show",
         "Path in title bar": "show",
@@ -163,10 +170,30 @@
         "News and Interests": "disable",
         "Taskbar: Colors on Taskbar, Start, and SysTray": "skip",
         "Titlebar: Theme colors on titlebar": "skip",
-        "Recycle Bin: Delete Confirmation Dialog": "enable",
+        "Recycle Bin: Delete confirmation dialog": "enable",
         "Recycle Bin: Desktop icon": "hide",
         "Align taskbar left": "enable",
-        "Show recently added apps": "disable"
+        "Show recently added apps": "disable",
+
+        "Context menu": {}
+      },
+
+      "Other features": {
+        "Auto-correct": "disable",
+        "Browser tabs during alt-tab": "disable",
+        "Developer mode": "enable",
+        "Game bar (ms-gamingoverlay)": "disable",
+        "Hibernation": "disable",
+        "Long paths": "enable",
+        "Startup sound": "disable",
+        "Sticky keys": "disable",
+        "Sudo": "enable",
+        "Superfetch": "disable",
+        "Windows Hello notifications": "disable",
+        "Windows Narrator hotkey": "disable",
+        "WSL": {
+          "Action": "disable"
+        }
       }
     }
   }

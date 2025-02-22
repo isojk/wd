@@ -1,47 +1,134 @@
 {
-  "ID": "home",
-  "Name": "The default profile for all my personal devices",
-  "Inherits": "default",
+  "ID": "Home",
+  "Name": "The default ruleset for all my personal devices",
+  "Inherits": "Default",
   "Rules": {
-    "System Configuration" : {
-      "Privacy": {
+    "System" : {
+      "Privacy options": {
         "Defender: Cloud-Based Protection": "disable",
         "Defender: Automatic sample submission": "disable"
       },
 
-      "General": {
+      "Other features": {
         "WSL": {
-          "action": "enable",
-          "distributions": [
+          "Action": "enable",
+          "Distributions": [
             {
-              "name": "Debian"
+              "Name": "Debian"
             }
           ]
         }
       }
     },
 
+    "Files": {      
+      "User profile": {
+        "Hide .ssh directory": "enable",
+
+        "Remove Contacts directory": "enable",
+        "Remove Favorites directory": "enable",
+        "Remove Music directory": "enable",
+        "Remove Links directory": "enable",
+        "Remove Saved Games directory": "enable",
+        "Remove Searches directory": "enable",
+
+        "Degrade Documents directory": "enable",
+        "Degrade Pictures directory": "enable",
+        "Degrade Videos directory": "enable",
+
+        "Remove .lesshst file": "enable"
+      },
+
+      "Bin directory": {
+        "Action": "enable",
+        "Include child subdirectories in the PATH variable when re-scanning": "enable"
+      }
+    },
+
     "Applications": {
-      "7zip": true,
-      "audacity": true,
-      "autohotkey": true,
-      "autoruns": true,
-      "everything": true,
-      "ffmpeg": true,
-      "google_chrome": true,
-      "hxd": true,
-      "keypirinha": true,
-      "obsidian": true,
-      "paintdotnet": true,
-      "potplayer": true,
-      "procexp": true,
-      "procmon": true,
-      "sumatrapdf": true,
-      "total_commander": true,
-      "ungoogled_chromium": true,
-      "vscode": true,
-      "windows_terminal": true,
-      "xnviewmp": true
+      "7Zip": {
+        "Default action": "fullSetup"
+      },
+
+      "Audacity": {
+        "Default action": "fullSetup"
+      },
+
+      "AutoHotkey": {
+        "Default action": "fullSetup"
+      },
+
+      "Autoruns": {
+        "Default action": "fullSetup"
+      },
+
+      "Everything": {
+        "Default action": "fullSetup"
+      },
+
+      "FFMpeg": {
+        "Default action": "fullSetup"
+      },
+
+      "Git": {
+        "Default action": "fullSetup"
+      },
+
+      "GoogleChrome": {
+        "Default action": "fullSetup"
+      },
+
+      "HxD": {
+        "Default action": "fullSetup"
+      },
+
+      "Keypirinha": {
+        "Default action": "fullSetup"
+      },
+
+      "Obsidian": {
+        "Default action": "fullSetup"
+      },
+
+      "PaintDotNet": {
+        "Default action": "fullSetup"
+      },
+
+      "PotPlayer": {
+        "Default action": "fullSetup"
+      },
+
+      "Procexp": {
+        "Default action": "fullSetup"
+      },
+
+      "Procmon": {
+        "Default action": "fullSetup"
+      },
+
+      "SumatraPDF": {
+        "Default action": "fullSetup"
+      },
+
+      "TotalCommander": {
+        "Default action": "fullSetup"
+      },
+
+      "UngoogledChromium": {
+        "Default action": "fullSetup"
+      },
+
+      "VSCode": {
+        "Default action": "fullSetup"
+      },
+
+      "WindowsTerminal": {
+        "Default action": "fullSetup"
+      },
+
+      "XNViewMP": {
+        "Default action": "fullSetup"
+      }
     }
   }
 }
