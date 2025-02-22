@@ -16,12 +16,6 @@ $ProgressPreference = "SilentlyContinue"
 # Make sure a correct trace information is displayed upon an unhandled exception
 trap { throw $Error[0] }
 
-$currentPrincipal = (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent()))
-if (-not ($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) {
-    Write-Error "You must execute this script with administrator privileges"
-    exit 1
-}
-
 Import-Module "$PSScriptRoot\Library\ImportModuleAsObject.psm1" -Force
 
 $systemModule = ImportModuleAsObject "$PSScriptRoot\Commands\System.psm1"
@@ -77,6 +71,11 @@ $Commands = @{
         }
 
         "Action" = {
+            if (-not (& $core.IsAdmin)) {
+                Write-Error "You must execute this command with administrator privileges"
+                exit 1
+            }
+
             $sa = @{
                 "Profile" = $Profile
                 "Help" = $Help

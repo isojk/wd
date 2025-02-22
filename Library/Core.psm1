@@ -1,6 +1,16 @@
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
+function IsAdmin {
+    [CmdletBinding()]
+    param ()
+
+    process {
+        $currentPrincipal = (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent()))
+        return $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+    }
+}
+
 function GetBaseDirectoryName {
     [CmdletBinding()]
     param ()
