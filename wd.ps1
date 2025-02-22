@@ -58,7 +58,14 @@ function ResetEnvVars {
     process {
         $appPath = (& $core.GetAppsPath)
         [Environment]::SetEnvironmentVariable("DOTFILES", $appPath, "User") | Out-Null
+        & $envutil.RefreshEnvVars
+    }
+}
 
+function IncludeItselfInPath {
+    process {
+        $basepath = (& $core.GetBasePath)
+        & $envutil.IncludeInPath -Target "User" -Path $basepath
         & $envutil.RefreshEnvVars
     }
 }
@@ -224,6 +231,16 @@ $Commands = @{
         }
     }
 
+    "IncludeItselfInPath" = [PSCustomObject] @{
+        "Usage" = {
+            return "Usage: wd IncludeItselfInPath"
+        }
+
+        "Action" = {
+            & IncludeItselfInPath
+        }
+    }
+
     "Debug" = [PSCustomObject] @{
         "Usage" = {
             return "Usage: wd Debug"
@@ -237,6 +254,7 @@ $Commands = @{
 
 if ($FirstRun) {
     & ResetEnvVars
+    & IncludeItselfInPath
     $Help = $true
 }
 
