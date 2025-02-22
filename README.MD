@@ -1,7 +1,8 @@
-Scripts for automating Windows system configuration and installation of common applications
+Scripts for automating Windows system configuration and installation of common applications,
+tailored for my own needs.
 
 Available features:
-- Automatic installation of applications
+- Streamlined installation and configuration of all common applications and libraries I do use on a daily basis
 - Tracking applications settings under version control, in a similar fashion to dotfiles
 - Setting privacy options and turning off all sorts of telemetry features
 - Managing / removing pre-installed vendor and third-party applications (including OneDrive)
@@ -13,7 +14,7 @@ Available features:
 
 Use at your own risk
 
-### Bootstraping on a new machine
+## Bootstraping on a new machine
 
 @TODO
 <!--
@@ -22,11 +23,11 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 ```
 -->
 
-### Usage
+## Usage
 
 See `wd -Help` for more information
 
-### Troubleshooting
+## Troubleshooting
 
 Some applications do not support relative path arguments or values in their setting files. Having absolute paths there
 makes it less fit for storing their configuration in the version control. To work around this issue the script defines
