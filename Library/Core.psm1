@@ -105,19 +105,6 @@ function GetPrivateAppsPath {
 
 Export-ModuleMember -Function GetPrivateAppsPath
 
-function GetLinksPath {
-    [CmdletBinding()]
-    param ()
-
-    process {
-        $path = (& GetBasePath)
-        $dirname = "Links"
-        [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($path, $dirname))
-    }
-}
-
-Export-ModuleMember -Function GetLinksPath
-
 function GetProfilesPath {
     [CmdletBinding()]
     param ()

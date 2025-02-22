@@ -254,6 +254,9 @@ $Commands = @{
 if ($FirstRun) {
     & ResetEnvVars
     & IncludeItselfInPath
+    
+    & $filesModule.IncludeShortcutsInPath
+
     $Help = $true
 }
 
