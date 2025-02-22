@@ -370,6 +370,10 @@ function RemoveOneDrive {
     )
 
     process {
+        if ((& $conutil.AskYesNo -Prompt "This process will completely remove OneDrive from the system, removes integration in the explorer and resets all directories in user profile. Do you wish to proceed?" -DefaultValue "yes") -ne "yes") {
+            return
+        }
+
         # Stop OneDrive
         & $logger.Log "Stopping OneDrive"
         $p = Get-Process -Name "OneDrive.exe" -ErrorAction SilentlyContinue
@@ -408,6 +412,7 @@ function RemoveOneDrive {
         }
 
         # Remove run option for new users
+        # @todo needs an audit
         & $logger.Log "Removing run option for new users"
         reg load "hku\Default" "$Env:SystemDrive\Users\Default\NTUSER.DAT"
         & $regutil.DeleteKey -Hive "HKCU" -Path "Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "OneDriveSetup"
@@ -422,6 +427,7 @@ function RemoveOneDrive {
         #sleep 4
 
         # Remove additional OneDrive leftovers
+        # @todo find out the correct way to do this
         #& $logger.Log "Removing additional OneDrive leftovers"
         #foreach ($item in (ls "$Env:windir\WinSxS\*onedrive*")) {
             #atn_core_takeown_folder $item.FullName
@@ -463,6 +469,8 @@ function RemoveOneDrive {
             & $regutil.SetValue -Hive "HKCU" -Path $userShellFoldersRegPath -Name $name -Type String -Value $value
         }
 
+        # @todo make this step as safe as it can be
+        <#
         $dirname = [Environment]::GetEnvironmentVariable("OneDrive", "User")
         if ($null -ne $dirname) {
             if (Test-Path "$dirname") {
@@ -481,10 +489,11 @@ function RemoveOneDrive {
                     Move-Item -Force "$dirname\Pictures\*" "$Env:USERPROFILE\Pictures"
                 }
 
-                & $logger.Log "Removing directory: $dirname"
-                Remove-Item -Force -Recurse -ErrorAction SilentlyContinue "$dirname"
+                #& $logger.Log "Removing directory: $dirname"
+                #Remove-Item -Force -Recurse -ErrorAction SilentlyContinue "$dirname"
             }
         }
+        #>
 
         & $logger.Log "Remove OneDrive environment variables"
         [Environment]::SetEnvironmentVariable("OneDrive", $null, "User")
