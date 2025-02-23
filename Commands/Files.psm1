@@ -57,6 +57,9 @@ function ExecuteUserProfileCommand {
         Documents   Personal                                {F42EE2D3-909F-4907-8871-4C22FC0BF756}
         #>
 
+        & $regutil.SetValue -Hive "HKCU" -Path "Software\Microsoft\Windows\CurrentVersion\Explorer" -Name "ShowFrequent" -Type "Dword" -Value 0
+        & $regutil.SetValue -Hive "HKCU" -Path "Software\Microsoft\Windows\CurrentVersion\Explorer" -Name "ShowCloudFilesInQuickAccess" -Type "Dword" -Value 0
+
         $usfKeyName = "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
 
         $rules.EvalRule("Hide .ssh directory", @{
@@ -146,7 +149,7 @@ function ExecuteUserProfileCommand {
 
         $rules.EvalRule("Degrade Documents directory", @{
             "enable" = {
-                $newName = "LegacyAppData"
+                $newName = "Documents" # keep the name same for compatibility reasons
                 $newPath = ([System.IO.Path]::GetFullPath([System.IO.Path]::Combine("${Env:USERPROFILE}", "${newName}")))
 
                 $oldPath = (& $regutil.GetValue -Hive "HKCU" -Path $usfKeyName -Name "Personal")
@@ -223,6 +226,7 @@ function ExecuteUserProfileCommand {
             }
         }
 
+        <#>
         $rules.EvalRule("Remove recent -> automatic destinations", @{
             "enable" = {
                 $dir = ([System.IO.Path]::GetFullPath([System.IO.Path]::Combine("${Env:USERPROFILE}", "AppData\Roaming\Microsoft\Windows\Recent\AutomaticDestinations")))
@@ -233,7 +237,9 @@ function ExecuteUserProfileCommand {
                 Remove-Item -Force -Recurse -ErrorAction SilentlyContinue "${dir}\*"                
             }
         })
-
+        <##>
+        
+        <#>
         $rules.EvalRule("Remove recent -> custom destinations", @{
             "enable" = {
                 $dir = ([System.IO.Path]::GetFullPath([System.IO.Path]::Combine("${Env:USERPROFILE}", "AppData\Roaming\Microsoft\Windows\Recent\CustomDestinations")))
@@ -244,6 +250,7 @@ function ExecuteUserProfileCommand {
                 Remove-Item -Force -Recurse -ErrorAction SilentlyContinue "${dir}\*"                
             }
         })
+        <##>
     }
 }
 

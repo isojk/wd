@@ -23,9 +23,6 @@
 
     "Files": {      
       "User profile": {
-        "Remove recent -> automatic destinations": "enable",
-        "Remove recent -> custom destinations": "enable",
-
         "Hide .ssh directory": "enable",
 
         "Remove Contacts directory": "enable",
