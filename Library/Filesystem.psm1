@@ -5,18 +5,28 @@ function MergeAttributes () {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)] [string] $Filename,
-        [Parameter(Mandatory = $false)] [switch] $Hidden,
-        [Parameter(Mandatory = $false)] [switch] $System
+        [Parameter(Mandatory = $false)] $Hidden,
+        [Parameter(Mandatory = $false)] $System
     )
 
     process {
         Get-Item $Filename -Force | ForEach-Object {
-            if ($Hidden) {
-                $_.Attributes = $_.Attributes -bor [System.IO.FileAttributes]::Hidden
+            if ($null -ne $Hidden) {
+                if ($true -eq $Hidden) {
+                    $_.Attributes = $_.Attributes -bor [System.IO.FileAttributes]::Hidden
+                }
+                else {
+                    $_.Attributes = $_.Attributes -band (-bnot [System.IO.FileAttributes]::Hidden)
+                }
             }
 
-            if ($System) {
-                $_.Attributes = $_.Attributes -bor [System.IO.FileAttributes]::System
+            if ($null -ne $System) {
+                if ($true -eq $System) {
+                    $_.Attributes = $_.Attributes -bor [System.IO.FileAttributes]::System
+                }
+                else {
+                    $_.Attributes = $_.Attributes -band (-bnot [System.IO.FileAttributes]::System)
+                }
             }
         }
     }

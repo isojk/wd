@@ -23,12 +23,15 @@
 
     "Files": {      
       "User profile": {
+        "Remove recent -> automatic destinations": "enable",
+        "Remove recent -> custom destinations": "enable",
+
         "Hide .ssh directory": "enable",
 
         "Remove Contacts directory": "enable",
         "Remove Favorites directory": "enable",
-        "Remove Music directory": "enable",
         "Remove Links directory": "enable",
+        "Remove Music directory": "enable",
         "Remove Saved Games directory": "enable",
         "Remove Searches directory": "enable",
 
@@ -36,7 +39,12 @@
         "Degrade Pictures directory": "enable",
         "Degrade Videos directory": "enable",
 
-        "Remove .lesshst file": "enable"
+        "Remove .lesshst file": "enable",
+
+        "Downloads": {
+          "New location": "d:/downloads",
+          "Degrade default location": true
+        }
       },
 
       "Bin directory": {
